@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sở GD&ĐT – Tổng Hợp Quyết Toán 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#1565C0;--blue-dk:#0D47A1;--blue-lt:#E3F2FD;--green:#2E7D32;--red:#C62828;--gold:#E65100;--border:#DEE4ED;--muted:#6B7A99;--bg:#F5F7FA;--radius:10px;--shadow:0 2px 12px rgba(21,101,192,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:#1C2333;min-height:100vh}
+.hdr{background:linear-gradient(120deg,var(--blue-dk),#1976D2 70%,#1e88e5);color:#fff;padding:20px 32px;display:flex;align-items:center;gap:18px;box-shadow:0 3px 16px rgba(13,71,161,.3)}
+.hdr-icon{font-size:36px}.hdr-text h1{font-size:18px;font-weight:800}.hdr-text .sub{font-size:12px;opacity:.8;margin-top:3px}
+.main{padding:24px 32px 60px;max-width:1400px;margin:0 auto}
+.card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:20px;overflow:hidden}
+.card-hdr{background:var(--blue-lt);border-bottom:1px solid #C5D9F0;padding:11px 18px;font-size:13px;font-weight:700;color:var(--blue-dk);display:flex;align-items:center;gap:8px}
+.card-body{padding:20px}
+
+/* upload zone */
+.upload-zone{border:3px dashed #B0C8F0;border-radius:12px;padding:40px;text-align:center;cursor:pointer;transition:all .2s;background:#F8FBFF}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--blue);background:var(--blue-lt)}
+.upload-zone .icon{font-size:48px;margin-bottom:12px}
+.upload-zone h3{font-size:15px;font-weight:700;color:var(--blue-dk);margin-bottom:6px}
+.upload-zone p{font-size:12.5px;color:var(--muted)}
+#fileInput{display:none}
+
+/* progress */
+.prog-list{margin-top:16px;display:flex;flex-direction:column;gap:6px}
+.prog-item{display:flex;align-items:center;gap:10px;font-size:12px;padding:6px 10px;border-radius:6px;background:#F8FBFF;border:1px solid var(--border)}
+.prog-item .ok{color:var(--green);font-size:16px}.prog-item .err{color:var(--red);font-size:16px}
+.prog-item .fname{flex:1;font-weight:600;color:var(--blue-dk)}
+.prog-item .info{color:var(--muted)}
+
+/* summary strip */
+.sum-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:20px}
+.s-box{background:#fff;border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);border:1px solid var(--border);text-align:center}
+.s-box .val{font-size:18px;font-weight:800;color:var(--blue)}.s-box .val.green{color:var(--green)}.s-box .val.gold{color:var(--gold)}
+.s-box .lbl{font-size:10.5px;color:var(--muted);margin-top:3px;line-height:1.4}
+
+/* table */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{background:var(--blue-dk);color:#fff;padding:8px 10px;text-align:center;font-size:11px;font-weight:700;border:1px solid rgba(255,255,255,.15);white-space:nowrap;position:sticky;top:0}
+thead tr:nth-child(2) th{background:var(--blue)}
+tbody tr{border-bottom:1px solid #ECF0F8}
+tbody tr:hover{background:#F0F6FF}
+tbody tr.grp{background:#EBF2FF;font-weight:800;color:var(--blue-dk)}
+td{padding:6px 8px;border:1px solid #ECF0F8;vertical-align:middle}
+td.stt{text-align:center;color:var(--muted);font-size:11px;width:54px}
+td.name{min-width:200px;font-size:12px;font-weight:500}
+td.num{text-align:right;font-size:12px}
+td.pct{text-align:center;font-weight:700;font-size:11.5px}
+.pct-hi{color:var(--green)}.pct-lo{color:var(--red)}.pct-na{color:var(--muted)}
+.chip{display:inline-block;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:700}
+.chip-so{background:#E3F2FD;color:#0D47A1}.chip-thpt{background:#E8F5E9;color:#1B5E20}
+.chip-ptdt{background:#FFF3E0;color:#E65100}.chip-tt{background:#F3E5F5;color:#6A1B9A}
+.chip-miss{background:#FFEBEE;color:#C62828}
+
+/* notice */
+.notice{background:#FFF8E1;border:1px solid var(--gold);border-radius:8px;padding:9px 14px;font-size:12px;color:#6D4C00;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+
+/* btn */
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.btn{font-family:inherit;font-size:13px;font-weight:700;border:none;border-radius:8px;padding:10px 20px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .2s}
+.btn-primary{background:var(--blue);color:#fff}.btn-primary:hover{background:var(--blue-dk)}
+.btn-green{background:var(--green);color:#fff}.btn-green:hover{background:#1B5E20}
+.btn-outline{background:#fff;color:#333;border:1.5px solid var(--border)}.btn-outline:hover{border-color:var(--blue);color:var(--blue)}
+.toast{position:fixed;top:18px;right:18px;background:var(--green);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.2);z-index:9999;transform:translateX(130%);transition:transform .3s}
+.toast.show{transform:translateX(0)}
+
+.missing-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.missing-chip{background:#FFEBEE;color:#C62828;border-radius:5px;padding:3px 9px;font-size:11px;font-weight:700;border:1px solid #FFCDD2}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-icon">🏫</div>
+  <div class="hdr-text">
+    <h1>Sở GD&ĐT Quảng Trị – Tổng Hợp Quyết Toán Ngân Sách 2025</h1>
+    <div class="sub">Nhập/ghép file JSON từ các đơn vị gửi về để tổng hợp tự động</div>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- BƯỚC 1: NẠP FILE -->
+  <div class="card">
+    <div class="card-hdr">📂 Bước 1 – Nhận & Nạp File JSON từ Các Đơn Vị</div>
+    <div class="card-body">
+      <div class="notice">📌 Yêu cầu các đơn vị gửi file <strong>.json</strong> (xuất từ phiếu nhập liệu của từng trường). Nạp tất cả file cùng lúc hoặc từng đợt, hệ thống sẽ ghép tự động.</div>
+      <div class="upload-zone" id="dropZone" onclick="document.getElementById('fileInput').click()" ondragover="onDrag(event,true)" ondragleave="onDrag(event,false)" ondrop="onDrop(event)">
+        <div class="icon">📁</div>
+        <h3>Kéo thả file JSON vào đây hoặc bấm để chọn file</h3>
+        <p>Chọn nhiều file cùng lúc (Ctrl+Click) &nbsp;·&nbsp; Định dạng: QT2025_11_xx_TenTruong.json</p>
+      </div>
+      <input type="file" id="fileInput" accept=".json" multiple onchange="loadFiles(this.files)">
+      <div class="prog-list" id="progList"></div>
+    </div>
+  </div>
+
+  <!-- BƯỚC 2: TỔNG HỢP -->
+  <div class="card" id="card-tonghop" style="display:none">
+    <div class="card-hdr">📊 Bước 2 – Tổng Hợp Toàn Ngành</div>
+    <div class="card-body">
+      <div class="sum-strip" id="sumStrip"></div>
+      <div id="missing-block"></div>
+      <div class="tbl-wrap">
+        <table id="mainTable">
+          <thead>
+            <tr>
+              <th rowspan="2">STT</th>
+              <th rowspan="2" style="min-width:210px;text-align:left">Tên đơn vị</th>
+              <th rowspan="2">Loại</th>
+              <th colspan="3">Ngân sách nhà nước</th>
+              <th colspan="2">Thu dịch vụ</th>
+              <th rowspan="2">Tổng chi<br>(NS+DV)</th>
+              <th rowspan="2">DT chuyển<br>năm sau</th>
+              <th rowspan="2">Cân đối</th>
+              <th rowspan="2">Trạng thái</th>
+            </tr>
+            <tr>
+              <th>Dự toán</th>
+              <th>Quyết toán</th>
+              <th>Tỷ lệ %</th>
+              <th>KH thu DV</th>
+              <th>Thực thu DV</th>
+            </tr>
+          </thead>
+          <tbody id="tblBody"></tbody>
+          <tfoot id="tblFoot"></tfoot>
+        </table>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-green" onclick="exportExcelCSV()">📥 Xuất CSV tổng hợp</button>
+        <button class="btn btn-primary" onclick="exportJSON()">💾 Xuất JSON tổng hợp</button>
+        <button class="btn btn-outline" onclick="clearAll()">🗑 Xóa tất cả & nạp lại</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const ALL_UNITS = [
+  {stt:'11.1',name:'Sở Giáo dục và Đào tạo',type:'so'},
+  {stt:'11.2',name:'Trường PTDT nội trú THPT Quảng Trị',type:'ptdt'},
+  {stt:'11.3',name:'Trường Giáo dục chuyên biệt tỉnh',type:'ptdt'},
+  {stt:'11.4',name:'Trường THPT Minh Hóa',type:'thpt'},
+  {stt:'11.5',name:'Trường THPT Tuyên Hóa',type:'thpt'},
+  {stt:'11.6',name:'Trường THPT Lê Trực',type:'thpt'},
+  {stt:'11.7',name:'Trường THPT Phan Bội Châu',type:'thpt'},
+  {stt:'11.8',name:'Trường THPT Lương Thế Vinh',type:'thpt'},
+  {stt:'11.9',name:'Trường THPT Lê Hồng Phong',type:'thpt'},
+  {stt:'11.10',name:'Trường THPT Quang Trung',type:'thpt'},
+  {stt:'11.11',name:'Trường THPT Nguyễn Bỉnh Khiêm',type:'thpt'},
+  {stt:'11.12',name:'Trường THPT số 2 Lê Lợi',type:'thpt'},
+  {stt:'11.13',name:'Trường THPT Lê Quý Đôn',type:'thpt'},
+  {stt:'11.14',name:'Trường THPT Hùng Vương',type:'thpt'},
+  {stt:'11.15',name:'Trường THPT Trần Phú',type:'thpt'},
+  {stt:'11.16',name:'Trường THPT Nguyễn Trãi',type:'thpt'},
+  {stt:'11.17',name:'Trường THPT Ngô Quyền',type:'thpt'},
+  {stt:'11.18',name:'Trường THPT Chuyên Võ Nguyên Giáp',type:'thpt'},
+  {stt:'11.19',name:'Trường THPT Đào Duy Từ',type:'thpt'},
+  {stt:'11.20',name:'Trường THPT Đồng Hới',type:'thpt'},
+  {stt:'11.21',name:'Trường THPT Phan Đình Phùng',type:'thpt'},
+  {stt:'11.22',name:'Trường THPT Ninh Châu',type:'thpt'},
+  {stt:'11.23',name:'Trường THPT Quảng Ninh',type:'thpt'},
+  {stt:'11.24',name:'Trường THPT Nguyễn Hữu Cảnh',type:'thpt'},
+  {stt:'11.25',name:'Trường THPT Lệ Thủy',type:'thpt'},
+  {stt:'11.26',name:'Trường THPT Hoàng Hoa Thám',type:'thpt'},
+  {stt:'11.27',name:'Trường THPT Trần Hưng Đạo',type:'thpt'},
+  {stt:'11.28',name:'Trường THPT Nguyễn Chí Thanh',type:'thpt'},
+  {stt:'11.29',name:'Trường THCS & THPT Hóa Tiến',type:'thpt'},
+  {stt:'11.30',name:'Trường THCS & THPT Bắc Sơn',type:'thpt'},
+  {stt:'11.31',name:'Trường THCS & THPT Việt Trung',type:'thpt'},
+  {stt:'11.32',name:'Trường THCS & THPT Trung Hóa',type:'thpt'},
+  {stt:'11.33',name:'Trường THCS & THPT Dương Văn An',type:'thpt'},
+  {stt:'11.34',name:'Trường PTDT Nội trú THPT Nam Quảng Trị',type:'ptdt'},
+  {stt:'11.35',name:'Trường THCS và THPT Bến Hải',type:'thpt'},
+  {stt:'11.36',name:'Trường THCS và THPT Bến Quan',type:'thpt'},
+  {stt:'11.37',name:'Trường THCS và THPT Cồn Tiên',type:'thpt'},
+  {stt:'11.38',name:'Trường THCS và THPT Cửa Việt',type:'thpt'},
+  {stt:'11.39',name:'Trường THCS và THPT Đakrông',type:'thpt'},
+  {stt:'11.40',name:'Trường THPT A Túc',type:'thpt'},
+  {stt:'11.41',name:'Trường THPT Bùi Dục Tài',type:'thpt'},
+  {stt:'11.42',name:'Trường THPT Cam Lộ',type:'thpt'},
+  {stt:'11.43',name:'Trường THPT Chế Lan Viên',type:'thpt'},
+  {stt:'11.44',name:'Trường THPT Chu Văn An',type:'thpt'},
+  {stt:'11.45',name:'Trường THPT Chuyên Lê Quý Đôn',type:'thpt'},
+  {stt:'11.46',name:'Trường THPT Cửa Tùng',type:'thpt'},
+  {stt:'11.47',name:'Trường THPT Đakrông',type:'thpt'},
+  {stt:'11.48',name:'Trường THPT Đông Hà',type:'thpt'},
+  {stt:'11.49',name:'Trường THPT Gio Linh',type:'thpt'},
+  {stt:'11.50',name:'Trường THPT Hải Lăng',type:'thpt'},
+  {stt:'11.51',name:'Trường THPT Hướng Hóa',type:'thpt'},
+  {stt:'11.52',name:'Trường THPT Hướng Phùng',type:'thpt'},
+  {stt:'11.53',name:'Trường THPT Lao Bảo',type:'thpt'},
+  {stt:'11.54',name:'Trường THPT Lê Lợi',type:'thpt'},
+  {stt:'11.55',name:'Trường THPT số 1 Lê Lợi',type:'thpt'},
+  {stt:'11.56',name:'Trường THPT Lê Thế Hiếu',type:'thpt'},
+  {stt:'11.57',name:'Trường THPT Nguyễn Huệ',type:'thpt'},
+  {stt:'11.58',name:'Trường THPT Nguyễn Hữu Thận',type:'thpt'},
+  {stt:'11.59',name:'Trường THPT Trần Thị Tâm',type:'thpt'},
+  {stt:'11.60',name:'Trường THPT Triệu Phong',type:'thpt'},
+  {stt:'11.61',name:'Trường THPT Quảng Trị',type:'thpt'},
+  {stt:'11.62',name:'Trường THPT Vĩnh Định',type:'thpt'},
+  {stt:'11.63',name:'Trường THPT Vĩnh Linh',type:'thpt'},
+  {stt:'11.64',name:'Trung tâm GDTX tỉnh',type:'tt'},
+  {stt:'11.65',name:'TT GDNN-GDTX Minh Hóa',type:'tt'},
+  {stt:'11.66',name:'TT GDNN-GDTX Tuyên Hóa',type:'tt'},
+  {stt:'11.67',name:'TT GDNN-GDTX Quảng Trạch',type:'tt'},
+  {stt:'11.68',name:'TT GDNN-GDTX Ba Đồn',type:'tt'},
+  {stt:'11.69',name:'TT GDNN-GDTX Bố Trạch',type:'tt'},
+  {stt:'11.70',name:'TT GDNN-GDTX Quảng Ninh',type:'tt'},
+  {stt:'11.71',name:'TT GDNN-GDTX TP Đồng Hới',type:'tt'},
+  {stt:'11.72',name:'TT GDNN-GDTX Lệ Thủy',type:'tt'},
+  {stt:'11.73',name:'TT GDNN-GDTX khu vực Đông Hà',type:'tt'},
+  {stt:'11.74',name:'TT GDNN-GDTX khu vực Gio Linh',type:'tt'},
+  {stt:'11.75',name:'TT GDNN-GDTX khu vực Cam Lộ',type:'tt'},
+  {stt:'11.76',name:'TT GDNN-GDTX khu vực Đakrông',type:'tt'},
+  {stt:'11.77',name:'TT GDNN-GDTX khu vực Triệu Phong',type:'tt'},
+  {stt:'11.78',name:'TT GDNN-GDTX khu vực Quảng Trị',type:'tt'},
+  {stt:'11.79',name:'TT GDNN-GDTX khu vực Hướng Hóa',type:'tt'},
+  {stt:'11.80',name:'TT GDNN-GDTX khu vực Vĩnh Linh',type:'tt'},
+  {stt:'11.81',name:'TT GDNN-GDTX khu vực Hải Lăng',type:'tt'},
+];
+const CHIP = {so:'<span class="chip chip-so">Sở</span>',thpt:'<span class="chip chip-thpt">THPT</span>',ptdt:'<span class="chip chip-ptdt">PTDT</span>',tt:'<span class="chip chip-tt">GDTX</span>'};
+
+let dataMap = {}; // stt -> json payload
+
+function onDrag(e,on){e.preventDefault();document.getElementById('dropZone').classList.toggle('drag',on)}
+function onDrop(e){e.preventDefault();document.getElementById('dropZone').classList.remove('drag');loadFiles(e.dataTransfer.files)}
+
+function loadFiles(files) {
+  Array.from(files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const data = JSON.parse(e.target.result);
+        const stt = data?.don_vi?.stt;
+        if(!stt) throw new Error('Không tìm thấy mã đơn vị');
+        dataMap[stt] = data;
+        addProgItem(file.name, stt, data.don_vi?.ten, true);
+        renderTable();
+      } catch(err) {
+        addProgItem(file.name, null, 'Lỗi: '+err.message, false);
+      }
+    };
+    reader.readAsText(file);
+  });
+}
+
+function addProgItem(fname, stt, name, ok) {
+  const list = document.getElementById('progList');
+  const el = document.createElement('div');
+  el.className = 'prog-item';
+  el.innerHTML = `<span class="${ok?'ok':'err'}">${ok?'✅':'❌'}</span><span class="fname">${fname}</span><span class="info">${name||''} ${stt?'('+stt+')':''}</span>`;
+  list.appendChild(el);
+}
+
+function renderTable() {
+  document.getElementById('card-tonghop').style.display = '';
+  const tbody = document.getElementById('tblBody');
+  const tfoot = document.getElementById('tblFoot');
+  tbody.innerHTML = '';
+  const totals = {dt:0,qt:0,thu_kh:0,thu_th:0,chuyen:0};
+  const missing = [];
+
+  ALL_UNITS.forEach(u => {
+    const d = dataMap[u.stt];
+    const tr = document.createElement('tr');
+    if(d) {
+      const ns = d.ngan_sach||{}, tdv = d.thu_dich_vu||{};
+      const dt = ns.dt_tong||0, qt = ns.qt_tong||0;
+      const thu_kh = tdv.tong_kh||0, thu_th = tdv.tong_th||0;
+      const chuyen = ns.chuyen_nam_sau||0;
+      const can_doi = ns.can_doi||0;
+      const pct = dt>0?(qt/dt*100):null;
+      totals.dt+=dt; totals.qt+=qt; totals.thu_kh+=thu_kh; totals.thu_th+=thu_th; totals.chuyen+=chuyen;
+      const pctClass = pct===null?'pct-na':pct>=95?'pct-hi':pct<80?'pct-lo':'';
+      const cdOk = Math.abs(can_doi)<0.01;
+      tr.innerHTML = `
+        <td class="stt">${u.stt}</td>
+        <td class="name">${u.name}</td>
+        <td style="text-align:center">${CHIP[u.type]||''}</td>
+        <td class="num">${fmt(dt)}</td>
+        <td class="num">${fmt(qt)}</td>
+        <td class="pct ${pctClass}">${pct!==null?pct.toFixed(1)+'%':'—'}</td>
+        <td class="num" style="color:#2E7D32">${fmt(thu_kh)}</td>
+        <td class="num" style="color:#2E7D32;font-weight:700">${fmt(thu_th)}</td>
+        <td class="num">${fmt(qt+thu_th)}</td>
+        <td class="num">${fmt(chuyen)}</td>
+        <td class="pct ${cdOk?'pct-hi':'pct-lo'}">${cdOk?'✅ OK':'⚠️ '+can_doi.toFixed(0)}</td>
+        <td style="text-align:center;font-size:11px;color:#2E7D32;font-weight:700">✅ Đã nộp</td>`;
+    } else {
+      missing.push(u.stt+' '+u.name);
+      tr.style.background = '#FFF8F8';
+      tr.innerHTML = `
+        <td class="stt">${u.stt}</td>
+        <td class="name" style="color:#999">${u.name}</td>
+        <td style="text-align:center">${CHIP[u.type]||''}</td>
+        <td colspan="8" style="text-align:center;color:#bbb;font-style:italic;font-size:11.5px">— Chưa nhận được file —</td>
+        <td style="text-align:center"><span class="chip chip-miss">⏳ Chờ</span></td>`;
+    }
+    tbody.appendChild(tr);
+  });
+
+  // footer
+  const pctTotal = totals.dt>0?(totals.qt/totals.dt*100):null;
+  tfoot.innerHTML = `<tr style="background:#EBF2FF;font-weight:800;font-size:12.5px">
+    <td colspan="3" style="padding:8px 10px;color:var(--blue-dk)">TỔNG CỘNG (${Object.keys(dataMap).length}/81 đơn vị)</td>
+    <td class="num">${fmt(totals.dt)}</td>
+    <td class="num">${fmt(totals.qt)}</td>
+    <td class="pct ${pctTotal>=95?'pct-hi':pctTotal<80?'pct-lo':''}">${pctTotal!==null?pctTotal.toFixed(1)+'%':'—'}</td>
+    <td class="num" style="color:#2E7D32">${fmt(totals.thu_kh)}</td>
+    <td class="num" style="color:#2E7D32;font-weight:800">${fmt(totals.thu_th)}</td>
+    <td class="num">${fmt(totals.qt+totals.thu_th)}</td>
+    <td class="num">${fmt(totals.chuyen)}</td>
+    <td colspan="2"></td>
+  </tr>`;
+
+  // summary strip
+  const received = Object.keys(dataMap).length;
+  document.getElementById('sumStrip').innerHTML = `
+    <div class="s-box"><div class="val">${received}<span style="font-size:12px;color:var(--muted)">/81</span></div><div class="lbl">Đơn vị<br>đã nộp file</div></div>
+    <div class="s-box"><div class="val">${fmt(totals.dt)}</div><div class="lbl">Tổng dự toán NS<br>(Tr.đ)</div></div>
+    <div class="s-box"><div class="val ${pctTotal>=95?'green':pctTotal<80?'red':''}">${pctTotal!==null?pctTotal.toFixed(1)+'%':'—'}</div><div class="lbl">Tỷ lệ thực hiện<br>QT/DT</div></div>
+    <div class="s-box"><div class="val gold">${fmt(totals.thu_th)}</div><div class="lbl">Thực thu dịch vụ<br>(Tr.đ)</div></div>
+    <div class="s-box"><div class="val" style="color:var(--red)">${81-received}</div><div class="lbl">Đơn vị<br>chưa nộp</div></div>
+  `;
+
+  // missing block
+  if(missing.length) {
+    document.getElementById('missing-block').innerHTML = `
+      <div class="notice">⚠️ <span><strong>${missing.length} đơn vị chưa nộp file:</strong></span></div>
+      <div class="missing-list">${missing.map(m=>`<span class="missing-chip">${m}</span>`).join('')}</div>
+      <br>`;
+  } else {
+    document.getElementById('missing-block').innerHTML = `<div class="notice" style="background:#E8F5E9;border-color:#A5D6A7;color:#1B5E20">✅ <strong>Tất cả 81 đơn vị đã nộp file!</strong> Có thể xuất tổng hợp.</div><br>`;
+  }
+}
+
+function fmt(v){return v?v.toLocaleString('vi-VN'):'—'}
+
+function exportExcelCSV() {
+  const header = ['STT','Tên đơn vị','Loại','DT NS','QT NS','Tỷ lệ %','KH Thu DV','Thực thu DV','Tổng chi','DT chuyển NS','Cân đối','Trạng thái'];
+  const rows = ALL_UNITS.map(u => {
+    const d = dataMap[u.stt];
+    if(!d) return [u.stt,`"${u.name}"`,u.type,'','','','','','','','','Chưa nộp'].join(',');
+    const ns=d.ngan_sach||{},tdv=d.thu_dich_vu||{};
+    const dt=ns.dt_tong||0,qt=ns.qt_tong||0,thu_th=tdv.tong_th||0;
+    const pct=dt>0?(qt/dt*100).toFixed(1):'';
+    return [u.stt,`"${u.name}"`,u.type,dt,qt,pct,tdv.tong_kh||0,thu_th,qt+thu_th,ns.chuyen_nam_sau||0,ns.can_doi||0,'Đã nộp'].join(',');
+  });
+  const csv = '\uFEFF'+header.join(',')+'\n'+rows.join('\n');
+  dl(new Blob([csv],{type:'text/csv;charset=utf-8'}), 'TongHop_GiaoDuc_QT2025.csv');
+  showToast('📥 Đã xuất CSV tổng hợp!');
+}
+
+function exportJSON() {
+  const payload = {created:new Date().toISOString(),tong_so_dv:ALL_UNITS.length,da_nop:Object.keys(dataMap).length,data:dataMap};
+  dl(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}), 'TongHop_GiaoDuc_QT2025.json');
+  showToast('💾 Đã xuất JSON tổng hợp!');
+}
+
+function dl(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click()}
+
+function clearAll(){if(!confirm('Xóa tất cả dữ liệu đã nạp?'))return;dataMap={};document.getElementById('progList').innerHTML='';document.getElementById('card-tonghop').style.display='none';showToast('🗑 Đã xóa!')}
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500)}
+</script>
+</body>
+</html>

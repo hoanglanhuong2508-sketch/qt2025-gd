@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quyết Toán NS 2025 – Trường THPT Bùi Dục Tài</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#1565C0;--blue-dk:#0D47A1;--blue-lt:#E3F2FD;
+  --green:#2E7D32;--green-lt:#E8F5E9;
+  --gold:#F9A825;--gold-lt:#FFF8E1;
+  --red:#C62828;--border:#DEE4ED;--muted:#6B7A99;
+  --bg:#F5F7FA;--radius:10px;--shadow:0 2px 12px rgba(21,101,192,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:#1C2333;min-height:100vh}
+
+.hdr{background:linear-gradient(120deg,var(--blue-dk),#1976D2 70%,#1e88e5);color:#fff;padding:20px 32px;display:flex;align-items:center;gap:18px;box-shadow:0 3px 16px rgba(13,71,161,.3)}
+.hdr-icon{font-size:36px;flex-shrink:0}
+.hdr-text h1{font-size:17px;font-weight:800;line-height:1.3}
+.hdr-text .sub{font-size:11.5px;opacity:.8;margin-top:3px}
+.hdr-badge{margin-left:auto;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:8px;padding:8px 14px;text-align:center;flex-shrink:0}
+.hdr-badge .yr{font-size:20px;font-weight:800}
+.hdr-badge .lb{font-size:10px;opacity:.8}
+
+.unit-banner{background:#fff;border-bottom:3px solid var(--blue);padding:12px 32px;display:flex;align-items:center;gap:14px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.unit-banner .stt-badge{background:var(--blue);color:#fff;font-size:12px;font-weight:800;padding:4px 10px;border-radius:6px}
+.unit-banner .unit-name{font-size:16px;font-weight:800;color:var(--blue-dk)}
+.unit-banner .unit-type{font-size:11px;color:var(--muted);margin-top:2px}
+.unit-banner .status{margin-left:auto;font-size:11.5px;font-weight:700;color:var(--muted)}
+.unit-banner .status.ok{color:var(--green)}
+
+.main{padding:24px 32px 60px;max-width:900px;margin:0 auto}
+
+.card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--border);margin-bottom:20px;overflow:hidden}
+.card-hdr{background:var(--blue-lt);border-bottom:1px solid #C5D9F0;padding:10px 18px;font-size:12.5px;font-weight:700;color:var(--blue-dk);display:flex;align-items:center;gap:8px}
+.card-body{padding:22px}
+
+.section-title{font-size:12px;font-weight:700;color:var(--blue-dk);text-transform:uppercase;letter-spacing:.5px;margin-bottom:14px;padding-bottom:7px;border-bottom:2px solid var(--blue-lt)}
+
+.frow{display:grid;gap:16px;margin-bottom:16px}
+.frow.c2{grid-template-columns:1fr 1fr}
+.frow.c3{grid-template-columns:1fr 1fr 1fr}
+.frow.c1{grid-template-columns:1fr}
+.fgrp{display:flex;flex-direction:column;gap:5px}
+.fgrp label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;display:flex;align-items:center;gap:6px}
+.fgrp label .hint{font-size:10px;background:#EEF2FF;color:#3949AB;padding:1px 6px;border-radius:4px;font-weight:600;text-transform:none;letter-spacing:0}
+.fgrp input[type=number]{font-family:inherit;font-size:14px;border:2px solid var(--border);border-radius:8px;padding:10px 14px;text-align:right;transition:all .2s;background:#fff}
+.fgrp input[type=number]:focus{border-color:var(--blue);outline:none;background:#F0F6FF;box-shadow:0 0 0 3px rgba(21,101,192,.08)}
+.fgrp input.auto{background:#F8FAFE;color:var(--muted);font-style:italic;border-style:dashed;border-color:#C5D9F0}
+.fgrp input.thu{background:#F1FBF3}
+.fgrp input.thu:focus{border-color:var(--green);background:#E8F5E9;box-shadow:0 0 0 3px rgba(46,125,50,.08)}
+.fgrp .unit-hint{font-size:10.5px;color:var(--muted);margin-top:3px}
+
+.result-box{background:linear-gradient(135deg,#EBF2FF,#F0F6FF);border:1.5px solid #B0C8F0;border-radius:var(--radius);padding:16px 20px;margin-top:4px}
+.result-box h4{font-size:11.5px;font-weight:700;color:var(--blue-dk);margin-bottom:12px;text-transform:uppercase;letter-spacing:.4px}
+.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.r-item{text-align:center;background:#fff;border-radius:8px;padding:10px;border:1px solid #D0E4F7}
+.r-item .val{font-size:17px;font-weight:800;color:var(--blue)}
+.r-item .val.green{color:var(--green)}.r-item .val.red{color:var(--red)}.r-item .val.gold{color:#E65100}
+.r-item .lbl{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.4}
+
+.notice{background:var(--gold-lt);border:1px solid var(--gold);border-radius:8px;padding:9px 14px;font-size:12px;color:#6D4C00;margin-bottom:18px;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;align-items:center}
+.btn{font-family:inherit;font-size:13px;font-weight:700;border:none;border-radius:8px;padding:11px 22px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .2s}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:var(--blue-dk);transform:translateY(-1px);box-shadow:0 4px 14px rgba(21,101,192,.3)}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover{background:#1B5E20;transform:translateY(-1px)}
+.btn-outline{background:#fff;color:#333;border:1.5px solid var(--border)}
+.btn-outline:hover{border-color:var(--blue);color:var(--blue)}
+
+.footer-note{text-align:center;font-size:11px;color:var(--muted);margin-top:30px;line-height:1.7}
+.footer-note strong{color:var(--blue-dk)}
+
+/* steps */
+.steps{display:flex;gap:0;margin-bottom:24px}
+.step{flex:1;text-align:center;position:relative}
+.step::after{content:'';position:absolute;top:18px;left:50%;width:100%;height:2px;background:var(--border);z-index:0}
+.step:last-child::after{display:none}
+.step-circle{width:36px;height:36px;border-radius:50%;background:var(--border);color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;position:relative;z-index:1}
+.step.done .step-circle{background:var(--green)}
+.step.active .step-circle{background:var(--blue)}
+.step-label{font-size:10.5px;color:var(--muted);font-weight:600}
+.step.active .step-label{color:var(--blue)}
+.step.done .step-label{color:var(--green)}
+
+.toast{position:fixed;top:18px;right:18px;background:var(--green);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,.2);z-index:9999;transform:translateX(130%);transition:transform .3s;display:flex;align-items:center;gap:8px}
+.toast.show{transform:translateX(0)}
+
+@media(max-width:600px){
+  .hdr{padding:14px 16px;flex-wrap:wrap}.hdr-badge{display:none}
+  .main{padding:14px 12px 40px}
+  .frow.c2,.frow.c3{grid-template-columns:1fr}
+  .result-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-icon">🎓</div>
+  <div class="hdr-text">
+    <h1>Phiếu Nhập Liệu Quyết Toán Ngân Sách Năm 2025</h1>
+    <div class="sub">Sở Giáo dục & Đào tạo tỉnh Quảng Trị &nbsp;·&nbsp; ĐVT: Triệu đồng</div>
+  </div>
+  <div class="hdr-badge"><div class="yr">2025</div><div class="lb">Năm NS</div></div>
+</div>
+
+<!-- Banner tên đơn vị (cố định, không sửa được) -->
+<div class="unit-banner">
+  <span class="stt-badge" id="el-stt">11.41</span>
+  <div>
+    <div class="unit-name" id="el-name">Trường THPT Bùi Dục Tài</div>
+    <div class="unit-type" id="el-type">Trường THPT</div>
+  </div>
+  <div class="status" id="el-status">⬜ Chưa nhập liệu</div>
+</div>
+
+<div class="main">
+
+  <!-- STEPS -->
+  <div class="steps">
+    <div class="step active" id="step1"><div class="step-circle">1</div><div class="step-label">Nhập số liệu</div></div>
+    <div class="step" id="step2"><div class="step-circle">2</div><div class="step-label">Kiểm tra</div></div>
+    <div class="step" id="step3"><div class="step-circle">3</div><div class="step-label">Xuất & Gửi Sở</div></div>
+  </div>
+
+  <div class="notice">
+    📌 <span>Đây là phiếu nhập liệu dành riêng cho <strong id="notice-name">Trường THPT Bùi Dục Tài</strong>. Vui lòng nhập đầy đủ các chỉ tiêu bên dưới, sau đó bấm <strong>"Xuất JSON & Gửi Sở"</strong> để lưu file và gửi về Sở GD&ĐT qua email / Google Drive theo hướng dẫn.</span>
+  </div>
+
+  <!-- PHẦN 1: NGÂN SÁCH NHÀ NƯỚC -->
+  <div class="card">
+    <div class="card-hdr">🏛 Phần 1 – Ngân Sách Nhà Nước Cấp</div>
+    <div class="card-body">
+
+      <div class="section-title">1.1 Dự toán ngân sách được giao</div>
+      <div class="frow c2">
+        <div class="fgrp">
+          <label>Dự toán NS được giao đầu năm <span class="hint">cột 1</span></label>
+          <input type="number" id="ns_dt_dau" placeholder="Nhập số (Triệu đồng)" min="0" oninput="recalc()">
+          <span class="unit-hint">Triệu đồng – theo Quyết định giao dự toán đầu năm 2025</span>
+        </div>
+        <div class="fgrp">
+          <label>Dự toán điều chỉnh bổ sung (nếu có) <span class="hint">điều chỉnh</span></label>
+          <input type="number" id="ns_dt_dc" placeholder="0 nếu không có" min="0" oninput="recalc()">
+          <span class="unit-hint">Dự toán bổ sung trong năm (ghi 0 nếu không có)</span>
+        </div>
+      </div>
+      <div class="frow c2">
+        <div class="fgrp">
+          <label>Dự toán năm trước chuyển sang <span class="hint">chuyển sang</span></label>
+          <input type="number" id="ns_dt_truoc" placeholder="0 nếu không có" min="0" oninput="recalc()">
+        </div>
+        <div class="fgrp">
+          <label>Tổng dự toán được sử dụng <span class="hint">tự tính</span></label>
+          <input type="number" class="auto" id="ns_dt_total" readonly placeholder="= Đầu năm + Điều chỉnh + Năm trước">
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top:20px">1.2 Quyết toán chi ngân sách</div>
+      <div class="frow c3">
+        <div class="fgrp">
+          <label>Chi thường xuyên <span class="hint">TX</span></label>
+          <input type="number" id="ns_qt_tx" placeholder="Triệu đồng" min="0" oninput="recalc()">
+          <span class="unit-hint">Lương, phụ cấp, hàng hóa-dịch vụ...</span>
+        </div>
+        <div class="fgrp">
+          <label>Chi không thường xuyên <span class="hint">KTX</span></label>
+          <input type="number" id="ns_qt_ktx" placeholder="Triệu đồng" min="0" oninput="recalc()">
+          <span class="unit-hint">Mua sắm TS, sửa chữa lớn...</span>
+        </div>
+        <div class="fgrp">
+          <label>Tổng quyết toán NS <span class="hint">tự tính</span></label>
+          <input type="number" class="auto" id="ns_qt_total" readonly placeholder="= TX + KTX">
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top:20px">1.3 Xử lý dự toán cuối năm</div>
+      <div class="frow c3">
+        <div class="fgrp">
+          <label>Dự toán chuyển sang năm 2026 <span class="hint">chuyển</span></label>
+          <input type="number" id="ns_chuyen" placeholder="0 nếu không có" min="0" oninput="recalc()">
+        </div>
+        <div class="fgrp">
+          <label>Dự toán hủy bỏ <span class="hint">hủy</span></label>
+          <input type="number" id="ns_huy" placeholder="0 nếu không có" min="0" oninput="recalc()">
+        </div>
+        <div class="fgrp">
+          <label>Kiểm tra cân đối <span class="hint">tự tính</span></label>
+          <input type="number" class="auto" id="ns_can_doi" readonly placeholder="= DT - QT - Chuyển - Hủy">
+          <span class="unit-hint" id="hint-candoi">Kết quả phải = 0 để hợp lệ</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHẦN 2: THU DỊCH VỤ -->
+  <div class="card">
+    <div class="card-hdr">💰 Phần 2 – Thu Dịch Vụ Sự Nghiệp (Không kể NSNN)</div>
+    <div class="card-body">
+
+      <div class="section-title">2.1 Học phí và lệ phí</div>
+      <div class="frow c2">
+        <div class="fgrp">
+          <label>Kế hoạch thu học phí / lệ phí <span class="hint">KH</span></label>
+          <input type="number" class="thu" id="hp_kh" placeholder="Triệu đồng" min="0" oninput="recalc()">
+        </div>
+        <div class="fgrp">
+          <label>Thực thu học phí / lệ phí <span class="hint">thực hiện</span></label>
+          <input type="number" class="thu" id="hp_th" placeholder="Triệu đồng" min="0" oninput="recalc()">
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top:18px">2.2 Thu dịch vụ khác</div>
+      <div class="frow c2">
+        <div class="fgrp">
+          <label>Kế hoạch thu dịch vụ khác <span class="hint">KH</span></label>
+          <input type="number" class="thu" id="dv_kh" placeholder="Triệu đồng" min="0" oninput="recalc()">
+          <span class="unit-hint">Dịch vụ bán trú, ký túc xá, căng-tin...</span>
+        </div>
+        <div class="fgrp">
+          <label>Thực thu dịch vụ khác <span class="hint">thực hiện</span></label>
+          <input type="number" class="thu" id="dv_th" placeholder="Triệu đồng" min="0" oninput="recalc()">
+        </div>
+      </div>
+      <div class="frow c2">
+        <div class="fgrp">
+          <label>Tổng KH thu dịch vụ <span class="hint">tự tính</span></label>
+          <input type="number" class="auto" id="thu_kh_total" readonly>
+        </div>
+        <div class="fgrp">
+          <label>Tổng thực thu dịch vụ <span class="hint">tự tính</span></label>
+          <input type="number" class="auto" id="thu_th_total" readonly>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KẾT QUẢ -->
+  <div class="card">
+    <div class="card-hdr">📊 Tổng Hợp Kết Quả</div>
+    <div class="card-body">
+      <div class="result-box">
+        <h4>📋 Tóm tắt số liệu đơn vị</h4>
+        <div class="result-grid">
+          <div class="r-item"><div class="val" id="r-dt">—</div><div class="lbl">Dự toán NS<br>(Tr.đ)</div></div>
+          <div class="r-item"><div class="val" id="r-qt">—</div><div class="lbl">Quyết toán NS<br>(Tr.đ)</div></div>
+          <div class="r-item"><div class="val" id="r-pct">—</div><div class="lbl">Tỷ lệ QT/DT</div></div>
+          <div class="r-item"><div class="val gold" id="r-thu">—</div><div class="lbl">Thực thu DV<br>(Tr.đ)</div></div>
+          <div class="r-item"><div class="val" id="r-tong">—</div><div class="lbl">Tổng chi<br>(NS + DV)</div></div>
+          <div class="r-item"><div class="val" id="r-cd">—</div><div class="lbl">Cân đối<br>(phải = 0)</div></div>
+        </div>
+      </div>
+
+      <div class="frow c1" style="margin-top:18px">
+        <div class="fgrp">
+          <label>Ghi chú / Thuyết minh thêm</label>
+          <textarea id="ghi_chu" rows="3" placeholder="Ghi chú về số liệu đặc biệt, lý do chênh lệch..." style="font-family:inherit;font-size:13px;border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;resize:vertical;width:100%"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THÔNG TIN KÝ -->
+  <div class="card">
+    <div class="card-hdr">✍️ Xác Nhận & Ký Gửi</div>
+    <div class="card-body">
+      <div class="frow c2">
+        <div class="fgrp">
+          <label>Người lập biểu</label>
+          <input type="text" id="nguoi_lap" placeholder="Họ và tên" style="font-family:inherit;font-size:13px;border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;text-align:left">
+        </div>
+        <div class="fgrp">
+          <label>Ngày lập</label>
+          <input type="text" id="ngay_lap" placeholder="VD: 15/3/2026" style="font-family:inherit;font-size:13px;border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;text-align:left">
+        </div>
+      </div>
+      <div class="frow c2">
+        <div class="fgrp">
+          <label>Thủ trưởng đơn vị</label>
+          <input type="text" id="thu_truong" placeholder="Họ và tên" style="font-family:inherit;font-size:13px;border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;text-align:left">
+        </div>
+        <div class="fgrp">
+          <label>SĐT liên hệ</label>
+          <input type="text" id="sdt" placeholder="Số điện thoại kế toán" style="font-family:inherit;font-size:13px;border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;text-align:left">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-green" onclick="xuatJSON()">📤 Xuất file & Gửi Sở</button>
+    <button class="btn btn-primary" onclick="luuTam()">💾 Lưu tạm (trình duyệt)</button>
+    <button class="btn btn-outline" onclick="xoaDuLieu()">🗑 Xóa nhập lại</button>
+  </div>
+
+  <div class="footer-note">
+    📧 Sau khi xuất file <strong>.json</strong>, gửi về Sở GD&ĐT qua:<br>
+    Email: <strong>so.gddt@quangtri.gov.vn</strong> &nbsp;|&nbsp;
+    Google Drive: theo link Sở đã chia sẻ &nbsp;|&nbsp;
+    Hạn nộp: <strong>31/3/2026</strong>
+  </div>
+</div>
+
+<div class="toast" id="toast">✅ Thành công!</div>
+
+<script>
+// ── THÔNG TIN ĐƠN VỊ (được điền sẵn khi tạo file) ──
+const DV = {
+  stt:  '11.41',
+  name: 'Trường THPT Bùi Dục Tài',
+  type: 'Trường THPT',
+  ma:   'BDT'
+};
+
+// ── RECALC ──
+function recalc() {
+  const g = id => parseFloat(document.getElementById(id)?.value)||0;
+
+  // DT total
+  const dt_total = g('ns_dt_dau') + g('ns_dt_dc') + g('ns_dt_truoc');
+  set('ns_dt_total', dt_total);
+
+  // QT total
+  const qt_total = g('ns_qt_tx') + g('ns_qt_ktx');
+  set('ns_qt_total', qt_total);
+
+  // Cân đối
+  const can_doi = dt_total - qt_total - g('ns_chuyen') - g('ns_huy');
+  set('ns_can_doi', can_doi);
+  const hintEl = document.getElementById('hint-candoi');
+  if(hintEl) {
+    if(dt_total === 0) { hintEl.textContent = 'Nhập dự toán để kiểm tra'; hintEl.style.color=''; }
+    else if(Math.abs(can_doi) < 0.01) { hintEl.textContent = '✅ Cân đối hợp lệ!'; hintEl.style.color='#2E7D32'; }
+    else { hintEl.textContent = '⚠️ Chưa cân đối – kiểm tra lại'; hintEl.style.color='#C62828'; }
+  }
+
+  // Thu DV
+  const thu_kh = g('hp_kh') + g('dv_kh');
+  const thu_th = g('hp_th') + g('dv_th');
+  set('thu_kh_total', thu_kh);
+  set('thu_th_total', thu_th);
+
+  // Results
+  const fmt = v => v ? v.toLocaleString('vi-VN') : '—';
+  document.getElementById('r-dt').textContent   = fmt(dt_total);
+  document.getElementById('r-qt').textContent   = fmt(qt_total);
+  const pct = dt_total > 0 ? (qt_total/dt_total*100).toFixed(1)+'%' : '—';
+  const pctEl = document.getElementById('r-pct');
+  pctEl.textContent = pct;
+  pctEl.className = 'val ' + (dt_total>0 ? (qt_total/dt_total>=.95?'green':qt_total/dt_total<.8?'red':'') : '');
+  document.getElementById('r-thu').textContent  = fmt(thu_th);
+  document.getElementById('r-tong').textContent = fmt(qt_total + thu_th);
+  const cdEl = document.getElementById('r-cd');
+  cdEl.textContent = dt_total > 0 ? (Math.abs(can_doi)<.01 ? '✅ 0' : can_doi.toLocaleString('vi-VN')) : '—';
+  cdEl.className = 'val ' + (dt_total>0 ? (Math.abs(can_doi)<.01?'green':'red') : '');
+
+  // Status
+  const statusEl = document.getElementById('el-status');
+  if(dt_total > 0 && qt_total > 0) {
+    statusEl.textContent = '✅ Đã nhập liệu';
+    statusEl.className = 'status ok';
+    document.getElementById('step1').className = 'step done';
+    document.getElementById('step2').className = 'step active';
+  } else {
+    statusEl.textContent = '⬜ Chưa nhập liệu';
+    statusEl.className = 'status';
+    document.getElementById('step1').className = 'step active';
+    document.getElementById('step2').className = 'step';
+  }
+}
+
+function set(id, val) {
+  const el = document.getElementById(id);
+  if(el) el.value = val !== 0 ? val : '';
+}
+
+// ── XUẤT JSON ──
+
+// ── GỬI DỮ LIỆU LÊN GOOGLE SHEETS ──
+var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzAxnriwEJWqv96Z9xf35bT95AZRceeEItR9WGZYliMjhmdxq7lBz-hjeaeA61bovLx/exec';
+
+function xuatJSON() {
+  var g = function(id) { return parseFloat(document.getElementById(id) ? document.getElementById(id).value : 0) || 0; };
+  var txt = function(id) { return document.getElementById(id) ? (document.getElementById(id).value || '').trim() : ''; };
+
+  var dt_total = g('ns_dt_dau') + g('ns_dt_dc') + g('ns_dt_truoc');
+  var qt_total = g('ns_qt_tx') + g('ns_qt_ktx');
+  var thu_th   = g('hp_th') + g('dv_th');
+
+  if (!dt_total && !qt_total) {
+    showToast('Vui lòng nhập số liệu trước khi gửi!', true);
+    return;
+  }
+
+  var payload = {
+    _meta: { version: '1.0', created: new Date().toISOString(), form: 'qt_giaoduc_2025' },
+    don_vi: { stt: DV.stt, ten: DV.name, loai: DV.type, ma: DV.ma },
+    nguoi_lap:  txt('nguoi_lap'),
+    thu_truong: txt('thu_truong'),
+    ngay_lap:   txt('ngay_lap'),
+    sdt:        txt('sdt'),
+    ghi_chu:    txt('ghi_chu'),
+    ngan_sach: {
+      dt_dau_nam:       g('ns_dt_dau'),
+      dt_dieu_chinh:    g('ns_dt_dc'),
+      dt_nam_truoc:     g('ns_dt_truoc'),
+      dt_tong:          dt_total,
+      qt_thuong_xuyen:  g('ns_qt_tx'),
+      qt_khong_tx:      g('ns_qt_ktx'),
+      qt_tong:          qt_total,
+      chuyen_nam_sau:   g('ns_chuyen'),
+      huy_bo:           g('ns_huy'),
+      can_doi:          dt_total - qt_total - g('ns_chuyen') - g('ns_huy')
+    },
+    thu_dich_vu: {
+      hoc_phi_kh: g('hp_kh'), hoc_phi_th: g('hp_th'),
+      dv_khac_kh: g('dv_kh'), dv_khac_th: g('dv_th'),
+      tong_kh: g('hp_kh') + g('dv_kh'),
+      tong_th: thu_th
+    },
+    tong_hop: {
+      tong_chi_ns_va_dv: qt_total + thu_th,
+      ty_le_qt_dt_pct: dt_total > 0 ? Math.round(qt_total / dt_total * 10000) / 100 : null
+    }
+  };
+
+  // Hiện trạng thái đang gửi
+  showToast('Đang gửi dữ liệu lên Sở...', false, '#1565C0');
+  document.getElementById('step2').className = 'step done';
+  document.getElementById('step3').className = 'step active';
+
+  // Gửi lên Google Sheets qua Apps Script
+  fetch(SHEETS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(function() {
+    luuTam();
+    showToast('Đã gửi thành công lên Sở! Cảm ơn bạn.');
+    document.getElementById('step3').className = 'step done';
+    document.getElementById('el-status').textContent = '✅ Đã nộp cho Sở';
+    document.getElementById('el-status').className = 'status ok';
+  })
+  .catch(function(err) {
+    showToast('Lỗi kết nối! Vui lòng thử lại.', true);
+  });
+}
+
+// ── LƯU TẠM ──
+function luuTam() {
+  const fields = ['ns_dt_dau','ns_dt_dc','ns_dt_truoc','ns_qt_tx','ns_qt_ktx','ns_chuyen','ns_huy','hp_kh','hp_th','dv_kh','dv_th','nguoi_lap','ngay_lap','thu_truong','sdt','ghi_chu'];
+  const saved = {};
+  fields.forEach(id => { saved[id] = document.getElementById(id)?.value||''; });
+  localStorage.setItem('qt2025_'+DV.stt, JSON.stringify(saved));
+  showToast('💾 Đã lưu tạm vào trình duyệt!');
+}
+
+function loadTam() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('qt2025_'+DV.stt)||'{}');
+    Object.keys(saved).forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.value = saved[id];
+    });
+    recalc();
+  } catch(e){}
+}
+
+function xoaDuLieu() {
+  if(!confirm('Xóa toàn bộ dữ liệu đã nhập?')) return;
+  const fields = ['ns_dt_dau','ns_dt_dc','ns_dt_truoc','ns_qt_tx','ns_qt_ktx','ns_chuyen','ns_huy','hp_kh','hp_th','dv_kh','dv_th','nguoi_lap','ngay_lap','thu_truong','sdt','ghi_chu'];
+  fields.forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+  localStorage.removeItem('qt2025_'+DV.stt);
+  recalc();
+  showToast('🗑 Đã xóa dữ liệu!');
+}
+
+function showToast(msg, isWarn) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = isWarn ? '#E65100' : '#2E7D32';
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 4000);
+}
+
+// ── INIT ──
+loadTam();
+</script>
+</body>
+</html>

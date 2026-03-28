@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Danh sách link gửi trường – QT 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#1565C0;--blue-lt:#E3F2FD;--green:#2E7D32;--border:#DEE4ED;--bg:#F5F7FA}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:#1C2333}
+.hdr{background:linear-gradient(120deg,#0D47A1,#1976D2);color:#fff;padding:20px 32px}
+.hdr h1{font-size:18px;font-weight:800}.hdr p{font-size:12px;opacity:.8;margin-top:3px}
+.main{padding:24px 28px 60px;max-width:1300px;margin:0 auto}
+.notice{background:#FFF8E1;border:1px solid #F9A825;border-radius:8px;padding:12px 16px;font-size:12.5px;color:#6D4C00;margin-bottom:20px;line-height:1.6}
+.notice strong{color:#E65100}
+.card{background:#fff;border-radius:10px;box-shadow:0 2px 12px rgba(21,101,192,.10);border:1px solid var(--border);overflow:hidden;margin-bottom:20px}
+.card-hdr{background:var(--blue-lt);border-bottom:1px solid #C5D9F0;padding:11px 18px;font-size:13px;font-weight:700;color:#0D47A1;display:flex;align-items:center;gap:10px}
+.filter-bar{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:#FAFBFD}
+.filter-bar select,.filter-bar input{font-family:inherit;font-size:12.5px;border:1.5px solid var(--border);border-radius:7px;padding:6px 10px}
+.filter-bar .cnt{margin-left:auto;font-size:11.5px;color:#6B7A99;font-weight:600}
+.filter-bar .cnt span{color:var(--blue);font-weight:800}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+thead th{background:#0D47A1;color:#fff;padding:9px 10px;text-align:left;font-size:11.5px;font-weight:700;white-space:nowrap}
+tbody tr:hover{background:#EBF5FF !important}
+.url-input{background:var(--blue-lt);border:1.5px solid #90CAF9;border-radius:8px;padding:10px 16px;font-family:monospace;font-size:13px;width:100%;color:#0D47A1;margin-bottom:8px}
+.btn-row{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.btn{font-family:inherit;font-size:13px;font-weight:700;border:none;border-radius:8px;padding:10px 18px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px}
+.btn-blue{background:var(--blue);color:#fff}.btn-blue:hover{background:#0D47A1}
+.btn-green{background:var(--green);color:#fff}.btn-green:hover{background:#1B5E20}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--green);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;font-weight:700;box-shadow:0 4px 16px rgba(0,0,0,.2);z-index:9999;transform:translateY(80px);opacity:0;transition:all .3s}
+.toast.show{transform:translateY(0);opacity:1}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <h1>📋 Danh Sách Link Gửi Các Trường – Quyết Toán NS 2025</h1>
+  <p>Sở GD&ĐT Quảng Trị &nbsp;·&nbsp; 81 đơn vị &nbsp;·&nbsp; Bấm "Copy link" hoặc "Tin Zalo" để gửi từng trường</p>
+</div>
+<div class="main">
+
+  <div class="notice">
+    ⚠️ <strong>Bước 1:</strong> Upload 81 file HTML lên GitHub Pages → lấy URL gốc dán vào ô bên dưới → bấm "Cập nhật link"<br>
+    📌 <strong>Bước 2:</strong> Lọc từng nhóm trường → bấm "Copy link" hoặc "Tin Zalo" → gửi cho đúng trường<br>
+    💬 <strong>Nút "Tin Zalo"</strong> sẽ copy sẵn đoạn tin nhắn Zalo đầy đủ, chỉ việc dán vào Zalo và gửi!
+  </div>
+
+  <div class="card">
+    <div class="card-hdr">⚙️ Cài đặt URL GitHub Pages</div>
+    <div style="padding:16px 20px">
+      <label style="font-size:12px;font-weight:700;color:#6B7A99;display:block;margin-bottom:6px">URL GitHub Pages của bạn (VD: https://tenban.github.io/qt2025-gd)</label>
+      <input class="url-input" id="baseUrl" placeholder="https://tenban.github.io/qt2025-gd" oninput="updateLinks()">
+      <div class="btn-row">
+        <button class="btn btn-blue" onclick="updateLinks()">🔄 Cập nhật tất cả link</button>
+        <button class="btn btn-green" onclick="copyAllZalo()">💬 Copy toàn bộ tin Zalo (CSV)</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr">📋 Danh sách 81 đơn vị</div>
+    <div class="filter-bar">
+      <label>Lọc:</label>
+      <select onchange="filterTable(this.value)">
+        <option value="">Tất cả (81)</option>
+        <option value="so">🏢 Sở GD&ĐT</option>
+        <option value="thpt">🏫 Trường THPT</option>
+        <option value="ptdt">🏕 PTDT/Chuyên biệt</option>
+        <option value="tt">📚 TT GDNN-GDTX</option>
+      </select>
+      <input type="text" placeholder="Tìm tên trường..." oninput="searchTable(this.value)" style="min-width:200px">
+      <span class="cnt">Hiển thị: <span id="cnt">81</span> đơn vị</span>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th style="width:54px">STT</th>
+          <th>Tên đơn vị</th>
+          <th style="width:150px">Loại</th>
+          <th style="width:220px">Tên file</th>
+          <th style="width:200px;text-align:center">Thao tác</th>
+        </tr></thead>
+        <tbody id="tblBody"><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.1</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="so">Sở Giáo dục và Đào tạo</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏢 Sở GD&ĐT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_1_SGD.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_1_SGD.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Sở Giáo dục và Đào tạo, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_1_SGD.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.2</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="ptdt">Trường PTDT nội trú THPT Quảng Trị</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏕 PTDT/Chuyên biệt</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_2_PTDT_QT.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_2_PTDT_QT.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường PTDT nội trú THPT Quảng Trị, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_2_PTDT_QT.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.3</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="ptdt">Trường Giáo dục chuyên biệt tỉnh Quảng Trị</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏕 PTDT/Chuyên biệt</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_3_GDCB.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_3_GDCB.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường Giáo dục chuyên biệt tỉnh Quảng Trị, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_3_GDCB.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.4</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Minh Hóa</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_4_MH.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_4_MH.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Minh Hóa, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_4_MH.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.5</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Tuyên Hóa</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_5_TH.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_5_TH.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Tuyên Hóa, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_5_TH.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.6</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Lê Trực</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_6_LeTruc.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_6_LeTruc.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Lê Trực, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_6_LeTruc.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.7</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Phan Bội Châu</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_7_PBC.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_7_PBC.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Phan Bội Châu, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_7_PBC.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.8</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Lương Thế Vinh</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_8_LTV.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_8_LTV.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Lương Thế Vinh, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_8_LTV.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.9</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Lê Hồng Phong</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_9_LHP.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_9_LHP.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Lê Hồng Phong, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_9_LHP.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.10</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Quang Trung</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_10_QTrung.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_10_QTrung.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Quang Trung, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_10_QTrung.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.11</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Nguyễn Bỉnh Khiêm</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_11_NBK.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_11_NBK.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Nguyễn Bỉnh Khiêm, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_11_NBK.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.12</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT số 2 Lê Lợi</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_12_LeLoi2.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_12_LeLoi2.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT số 2 Lê Lợi, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_12_LeLoi2.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.13</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Lê Quý Đôn</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_13_LQD.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_13_LQD.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Lê Quý Đôn, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_13_LQD.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.14</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Hùng Vương</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_14_HV.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_14_HV.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Hùng Vương, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_14_HV.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.15</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Trần Phú</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_15_TranPhu.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_15_TranPhu.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Trần Phú, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_15_TranPhu.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.16</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Nguyễn Trãi</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_16_NT.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_16_NT.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Nguyễn Trãi, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_16_NT.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.17</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Ngô Quyền</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_17_NQ.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_17_NQ.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Ngô Quyền, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_17_NQ.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.18</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Chuyên Võ Nguyên Giáp</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_18_VNG.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_18_VNG.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Chuyên Võ Nguyên Giáp, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_18_VNG.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.19</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Đào Duy Từ</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_19_DDT.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_19_DDT.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Đào Duy Từ, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_19_DDT.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.20</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Đồng Hới</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_20_DH.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_20_DH.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Đồng Hới, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_20_DH.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.21</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Phan Đình Phùng</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_21_PDP.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_21_PDP.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Phan Đình Phùng, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_21_PDP.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.22</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Ninh Châu</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_22_NChau.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_22_NChau.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Ninh Châu, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_22_NChau.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.23</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Quảng Ninh</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_23_QNinh.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_23_QNinh.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Quảng Ninh, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_23_QNinh.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.24</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Nguyễn Hữu Cảnh</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_24_NHC.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_24_NHC.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Nguyễn Hữu Cảnh, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_24_NHC.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.25</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Lệ Thủy</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_25_LThuy.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_25_LThuy.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Lệ Thủy, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_25_LThuy.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.26</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Hoàng Hoa Thám</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_26_HHT.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_26_HHT.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Hoàng Hoa Thám, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_26_HHT.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.27</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Trần Hưng Đạo</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_27_THD.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_27_THD.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Trần Hưng Đạo, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_27_THD.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.28</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Nguyễn Chí Thanh</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_28_NCT.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_28_NCT.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Nguyễn Chí Thanh, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_28_NCT.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.29</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THCS & THPT Hóa Tiến</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_29_HoaTien.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_29_HoaTien.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THCS & THPT Hóa Tiến, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_29_HoaTien.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.30</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THCS & THPT Bắc Sơn</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_30_BacSon.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_30_BacSon.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THCS & THPT Bắc Sơn, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_30_BacSon.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.31</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THCS & THPT Việt Trung</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_31_VietTrung.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_31_VietTrung.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THCS & THPT Việt Trung, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_31_VietTrung.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.32</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THCS & THPT Trung Hóa</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_32_TrungHoa.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_32_TrungHoa.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THCS & THPT Trung Hóa, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_32_TrungHoa.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.33</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THCS & THPT Dương Văn An</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_33_DVAn.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_33_DVAn.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THCS & THPT Dương Văn An, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_33_DVAn.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.34</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="ptdt">Trường PTDT Nội trú THPT Nam Quảng Trị</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏕 PTDT/Chuyên biệt</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_34_PTDT_NQT.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_34_PTDT_NQT.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường PTDT Nội trú THPT Nam Quảng Trị, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_34_PTDT_NQT.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.35</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THCS và THPT Bến Hải</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_35_BenHai.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_35_BenHai.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THCS và THPT Bến Hải, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_35_BenHai.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.36</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THCS và THPT Bến Quan</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_36_BenQuan.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_36_BenQuan.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THCS và THPT Bến Quan, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_36_BenQuan.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.37</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THCS và THPT Cồn Tiên</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_37_ConTien.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_37_ConTien.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THCS và THPT Cồn Tiên, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_37_ConTien.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.38</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THCS và THPT Cửa Việt</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_38_CuaViet.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_38_CuaViet.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THCS và THPT Cửa Việt, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_38_CuaViet.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.39</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THCS và THPT Đakrông</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_39_Dakrong.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_39_Dakrong.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THCS và THPT Đakrông, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_39_Dakrong.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.40</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT A Túc</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_40_ATuc.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_40_ATuc.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT A Túc, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_40_ATuc.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.41</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Bùi Dục Tài</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_41_BDT.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_41_BDT.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Bùi Dục Tài, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_41_BDT.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.42</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Cam Lộ</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_42_CamLo.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_42_CamLo.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Cam Lộ, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_42_CamLo.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.43</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Chế Lan Viên</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_43_CLV.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_43_CLV.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Chế Lan Viên, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_43_CLV.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.44</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Chu Văn An</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_44_CVAn.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_44_CVAn.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Chu Văn An, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_44_CVAn.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.45</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Chuyên Lê Quý Đôn</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_45_LQDon.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_45_LQDon.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Chuyên Lê Quý Đôn, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_45_LQDon.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.46</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Cửa Tùng</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_46_CuaTung.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_46_CuaTung.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Cửa Tùng, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_46_CuaTung.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.47</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Đakrông</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_47_DakrongT.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_47_DakrongT.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Đakrông, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_47_DakrongT.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.48</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Đông Hà</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_48_DongHa.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_48_DongHa.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Đông Hà, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_48_DongHa.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.49</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Gio Linh</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_49_GioLinh.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_49_GioLinh.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Gio Linh, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_49_GioLinh.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.50</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Hải Lăng</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_50_HaiLang.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_50_HaiLang.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Hải Lăng, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_50_HaiLang.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.51</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Hướng Hóa</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_51_HuongHoa.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_51_HuongHoa.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Hướng Hóa, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_51_HuongHoa.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.52</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Hướng Phùng</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_52_HuongPhung.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_52_HuongPhung.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Hướng Phùng, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_52_HuongPhung.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.53</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Lao Bảo</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_53_LaoBao.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_53_LaoBao.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Lao Bảo, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_53_LaoBao.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.54</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Lê Lợi</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_54_LeLoi.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_54_LeLoi.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Lê Lợi, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_54_LeLoi.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.55</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT số 1 Lê Lợi</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_55_LeLoi1.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_55_LeLoi1.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT số 1 Lê Lợi, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_55_LeLoi1.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.56</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Lê Thế Hiếu</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_56_LTHieu.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_56_LTHieu.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Lê Thế Hiếu, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_56_LTHieu.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.57</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Nguyễn Huệ</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_57_NHue.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_57_NHue.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Nguyễn Huệ, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_57_NHue.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.58</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Nguyễn Hữu Thận</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_58_NHThan.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_58_NHThan.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Nguyễn Hữu Thận, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_58_NHThan.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.59</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Trần Thị Tâm</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_59_TTTam.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_59_TTTam.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Trần Thị Tâm, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_59_TTTam.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.60</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Triệu Phong</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_60_TrieuPhong.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_60_TrieuPhong.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Triệu Phong, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_60_TrieuPhong.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.61</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Quảng Trị</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_61_QTri.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_61_QTri.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Quảng Trị, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_61_QTri.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.62</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Vĩnh Định</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_62_VDinh.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_62_VDinh.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Vĩnh Định, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_62_VDinh.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.63</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="thpt">Trường THPT Vĩnh Linh</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">🏫 Trường THPT</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_63_VLinh.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_63_VLinh.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trường THPT Vĩnh Linh, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_63_VLinh.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.64</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="tt">Trung tâm GDTX tỉnh</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">📚 TT GDNN-GDTX</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_64_GDTX_Tinh.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_64_GDTX_Tinh.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trung tâm GDTX tỉnh, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_64_GDTX_Tinh.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.65</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="tt">Trung tâm GDNN-GDTX Minh Hóa</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">📚 TT GDNN-GDTX</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_65_GDTX_MH.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_65_GDTX_MH.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trung tâm GDNN-GDTX Minh Hóa, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_65_GDTX_MH.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.66</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="tt">Trung tâm GDNN-GDTX Tuyên Hóa</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">📚 TT GDNN-GDTX</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_66_GDTX_TH.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_66_GDTX_TH.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trung tâm GDNN-GDTX Tuyên Hóa, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_66_GDTX_TH.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.67</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="tt">Trung tâm GDNN-GDTX Quảng Trạch</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">📚 TT GDNN-GDTX</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_67_GDTX_QTrach.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_67_GDTX_QTrach.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trung tâm GDNN-GDTX Quảng Trạch, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_67_GDTX_QTrach.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.68</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="tt">Trung tâm GDNN-GDTX Ba Đồn</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">📚 TT GDNN-GDTX</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_68_GDTX_BaDon.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_68_GDTX_BaDon.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trung tâm GDNN-GDTX Ba Đồn, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_68_GDTX_BaDon.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.69</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="tt">Trung tâm GDNN-GDTX Bố Trạch</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">📚 TT GDNN-GDTX</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_69_GDTX_BTrach.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_69_GDTX_BTrach.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trung tâm GDNN-GDTX Bố Trạch, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_69_GDTX_BTrach.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.70</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="tt">Trung tâm GDNN-GDTX Quảng Ninh</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">📚 TT GDNN-GDTX</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_70_GDTX_QNinh.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_70_GDTX_QNinh.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trung tâm GDNN-GDTX Quảng Ninh, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_70_GDTX_QNinh.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.71</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="tt">Trung tâm GDNN-GDTX TP Đồng Hới</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">📚 TT GDNN-GDTX</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_71_GDTX_DH.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_71_GDTX_DH.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trung tâm GDNN-GDTX TP Đồng Hới, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_71_GDTX_DH.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.72</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="tt">Trung tâm GDNN-GDTX Lệ Thủy</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">📚 TT GDNN-GDTX</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_72_GDTX_LThuy.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_72_GDTX_LThuy.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trung tâm GDNN-GDTX Lệ Thủy, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_72_GDTX_LThuy.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.73</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="tt">Trung tâm GDNN-GDTX khu vực Đông Hà</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">📚 TT GDNN-GDTX</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_73_GDTX_DongHa.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_73_GDTX_DongHa.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trung tâm GDNN-GDTX khu vực Đông Hà, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_73_GDTX_DongHa.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.74</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="tt">Trung tâm GDNN-GDTX khu vực Gio Linh</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">📚 TT GDNN-GDTX</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_74_GDTX_GL.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_74_GDTX_GL.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trung tâm GDNN-GDTX khu vực Gio Linh, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_74_GDTX_GL.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.75</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="tt">Trung tâm GDNN-GDTX khu vực Cam Lộ</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">📚 TT GDNN-GDTX</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_75_GDTX_CL.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_75_GDTX_CL.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trung tâm GDNN-GDTX khu vực Cam Lộ, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_75_GDTX_CL.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.76</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="tt">Trung tâm GDNN-GDTX khu vực Đakrông</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">📚 TT GDNN-GDTX</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_76_GDTX_DK.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_76_GDTX_DK.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trung tâm GDNN-GDTX khu vực Đakrông, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_76_GDTX_DK.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.77</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="tt">Trung tâm GDNN-GDTX khu vực Triệu Phong</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">📚 TT GDNN-GDTX</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_77_GDTX_TP.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_77_GDTX_TP.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trung tâm GDNN-GDTX khu vực Triệu Phong, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_77_GDTX_TP.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.78</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="tt">Trung tâm GDNN-GDTX khu vực Quảng Trị</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">📚 TT GDNN-GDTX</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_78_GDTX_QT.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_78_GDTX_QT.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trung tâm GDNN-GDTX khu vực Quảng Trị, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_78_GDTX_QT.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.79</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="tt">Trung tâm GDNN-GDTX khu vực Hướng Hóa</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">📚 TT GDNN-GDTX</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_79_GDTX_HH.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_79_GDTX_HH.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trung tâm GDNN-GDTX khu vực Hướng Hóa, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_79_GDTX_HH.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#fff">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.80</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="tt">Trung tâm GDNN-GDTX khu vực Vĩnh Linh</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">📚 TT GDNN-GDTX</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_80_GDTX_VL.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_80_GDTX_VL.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trung tâm GDNN-GDTX khu vực Vĩnh Linh, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_80_GDTX_VL.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr><tr style="background:#F8FBFF">
+      <td style="text-align:center;color:#6B7A99;font-size:11px;padding:7px 8px">11.81</td>
+      <td style="padding:7px 10px;font-size:12.5px;font-weight:600" data-type="tt">Trung tâm GDNN-GDTX khu vực Hải Lăng</td>
+      <td style="text-align:center;padding:7px 8px;font-size:11px">📚 TT GDNN-GDTX</td>
+      <td style="padding:7px 8px;font-size:11px;font-family:monospace;color:#1565C0;word-break:break-all">QT2025_11_81_GDTX_HL.html</td>
+      <td style="padding:7px 8px;text-align:center">
+        <button onclick="copyLink('https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_81_GDTX_HL.html', this)" style="background:#E3F2FD;color:#0D47A1;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">📋 Copy link</button>
+        &nbsp;
+        <button onclick="copyZalo(`[Sở GD&ĐT Quảng Trị] Kính gửi Trung tâm GDNN-GDTX khu vực Hải Lăng, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.
+https://YOUR_GITHUB.github.io/qt2025-gd/QT2025_11_81_GDTX_HL.html`, this)" style="background:#E8F5E9;color:#1B5E20;border:none;border-radius:5px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">💬 Tin Zalo</button>
+      </td>
+    </tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+var BASE_URL = '';
+var UNITS_DATA = [('11.1', 'Sở Giáo dục và Đào tạo', 'Sở GD&ĐT', 'SGD', 'so'), ('11.2', 'Trường PTDT nội trú THPT Quảng Trị', 'PTDT Nội trú', 'PTDT_QT', 'ptdt'), ('11.3', 'Trường Giáo dục chuyên biệt tỉnh Quảng Trị', 'Chuyên biệt', 'GDCB', 'ptdt'), ('11.4', 'Trường THPT Minh Hóa', 'Trường THPT', 'MH', 'thpt'), ('11.5', 'Trường THPT Tuyên Hóa', 'Trường THPT', 'TH', 'thpt'), ('11.6', 'Trường THPT Lê Trực', 'Trường THPT', 'LeTruc', 'thpt'), ('11.7', 'Trường THPT Phan Bội Châu', 'Trường THPT', 'PBC', 'thpt'), ('11.8', 'Trường THPT Lương Thế Vinh', 'Trường THPT', 'LTV', 'thpt'), ('11.9', 'Trường THPT Lê Hồng Phong', 'Trường THPT', 'LHP', 'thpt'), ('11.10', 'Trường THPT Quang Trung', 'Trường THPT', 'QTrung', 'thpt'), ('11.11', 'Trường THPT Nguyễn Bỉnh Khiêm', 'Trường THPT', 'NBK', 'thpt'), ('11.12', 'Trường THPT số 2 Lê Lợi', 'Trường THPT', 'LeLoi2', 'thpt'), ('11.13', 'Trường THPT Lê Quý Đôn', 'Trường THPT', 'LQD', 'thpt'), ('11.14', 'Trường THPT Hùng Vương', 'Trường THPT', 'HV', 'thpt'), ('11.15', 'Trường THPT Trần Phú', 'Trường THPT', 'TranPhu', 'thpt'), ('11.16', 'Trường THPT Nguyễn Trãi', 'Trường THPT', 'NT', 'thpt'), ('11.17', 'Trường THPT Ngô Quyền', 'Trường THPT', 'NQ', 'thpt'), ('11.18', 'Trường THPT Chuyên Võ Nguyên Giáp', 'Trường THPT', 'VNG', 'thpt'), ('11.19', 'Trường THPT Đào Duy Từ', 'Trường THPT', 'DDT', 'thpt'), ('11.20', 'Trường THPT Đồng Hới', 'Trường THPT', 'DH', 'thpt'), ('11.21', 'Trường THPT Phan Đình Phùng', 'Trường THPT', 'PDP', 'thpt'), ('11.22', 'Trường THPT Ninh Châu', 'Trường THPT', 'NChau', 'thpt'), ('11.23', 'Trường THPT Quảng Ninh', 'Trường THPT', 'QNinh', 'thpt'), ('11.24', 'Trường THPT Nguyễn Hữu Cảnh', 'Trường THPT', 'NHC', 'thpt'), ('11.25', 'Trường THPT Lệ Thủy', 'Trường THPT', 'LThuy', 'thpt'), ('11.26', 'Trường THPT Hoàng Hoa Thám', 'Trường THPT', 'HHT', 'thpt'), ('11.27', 'Trường THPT Trần Hưng Đạo', 'Trường THPT', 'THD', 'thpt'), ('11.28', 'Trường THPT Nguyễn Chí Thanh', 'Trường THPT', 'NCT', 'thpt'), ('11.29', 'Trường THCS & THPT Hóa Tiến', 'Trường THCS&THPT', 'HoaTien', 'thpt'), ('11.30', 'Trường THCS & THPT Bắc Sơn', 'Trường THCS&THPT', 'BacSon', 'thpt'), ('11.31', 'Trường THCS & THPT Việt Trung', 'Trường THCS&THPT', 'VietTrung', 'thpt'), ('11.32', 'Trường THCS & THPT Trung Hóa', 'Trường THCS&THPT', 'TrungHoa', 'thpt'), ('11.33', 'Trường THCS & THPT Dương Văn An', 'Trường THCS&THPT', 'DVAn', 'thpt'), ('11.34', 'Trường PTDT Nội trú THPT Nam Quảng Trị', 'PTDT Nội trú', 'PTDT_NQT', 'ptdt'), ('11.35', 'Trường THCS và THPT Bến Hải', 'Trường THCS&THPT', 'BenHai', 'thpt'), ('11.36', 'Trường THCS và THPT Bến Quan', 'Trường THCS&THPT', 'BenQuan', 'thpt'), ('11.37', 'Trường THCS và THPT Cồn Tiên', 'Trường THCS&THPT', 'ConTien', 'thpt'), ('11.38', 'Trường THCS và THPT Cửa Việt', 'Trường THCS&THPT', 'CuaViet', 'thpt'), ('11.39', 'Trường THCS và THPT Đakrông', 'Trường THCS&THPT', 'Dakrong', 'thpt'), ('11.40', 'Trường THPT A Túc', 'Trường THPT', 'ATuc', 'thpt'), ('11.41', 'Trường THPT Bùi Dục Tài', 'Trường THPT', 'BDT', 'thpt'), ('11.42', 'Trường THPT Cam Lộ', 'Trường THPT', 'CamLo', 'thpt'), ('11.43', 'Trường THPT Chế Lan Viên', 'Trường THPT', 'CLV', 'thpt'), ('11.44', 'Trường THPT Chu Văn An', 'Trường THPT', 'CVAn', 'thpt'), ('11.45', 'Trường THPT Chuyên Lê Quý Đôn', 'Trường THPT', 'LQDon', 'thpt'), ('11.46', 'Trường THPT Cửa Tùng', 'Trường THPT', 'CuaTung', 'thpt'), ('11.47', 'Trường THPT Đakrông', 'Trường THPT', 'DakrongT', 'thpt'), ('11.48', 'Trường THPT Đông Hà', 'Trường THPT', 'DongHa', 'thpt'), ('11.49', 'Trường THPT Gio Linh', 'Trường THPT', 'GioLinh', 'thpt'), ('11.50', 'Trường THPT Hải Lăng', 'Trường THPT', 'HaiLang', 'thpt'), ('11.51', 'Trường THPT Hướng Hóa', 'Trường THPT', 'HuongHoa', 'thpt'), ('11.52', 'Trường THPT Hướng Phùng', 'Trường THPT', 'HuongPhung', 'thpt'), ('11.53', 'Trường THPT Lao Bảo', 'Trường THPT', 'LaoBao', 'thpt'), ('11.54', 'Trường THPT Lê Lợi', 'Trường THPT', 'LeLoi', 'thpt'), ('11.55', 'Trường THPT số 1 Lê Lợi', 'Trường THPT', 'LeLoi1', 'thpt'), ('11.56', 'Trường THPT Lê Thế Hiếu', 'Trường THPT', 'LTHieu', 'thpt'), ('11.57', 'Trường THPT Nguyễn Huệ', 'Trường THPT', 'NHue', 'thpt'), ('11.58', 'Trường THPT Nguyễn Hữu Thận', 'Trường THPT', 'NHThan', 'thpt'), ('11.59', 'Trường THPT Trần Thị Tâm', 'Trường THPT', 'TTTam', 'thpt'), ('11.60', 'Trường THPT Triệu Phong', 'Trường THPT', 'TrieuPhong', 'thpt'), ('11.61', 'Trường THPT Quảng Trị', 'Trường THPT', 'QTri', 'thpt'), ('11.62', 'Trường THPT Vĩnh Định', 'Trường THPT', 'VDinh', 'thpt'), ('11.63', 'Trường THPT Vĩnh Linh', 'Trường THPT', 'VLinh', 'thpt'), ('11.64', 'Trung tâm GDTX tỉnh', 'TT GDNN-GDTX', 'GDTX_Tinh', 'tt'), ('11.65', 'Trung tâm GDNN-GDTX Minh Hóa', 'TT GDNN-GDTX', 'GDTX_MH', 'tt'), ('11.66', 'Trung tâm GDNN-GDTX Tuyên Hóa', 'TT GDNN-GDTX', 'GDTX_TH', 'tt'), ('11.67', 'Trung tâm GDNN-GDTX Quảng Trạch', 'TT GDNN-GDTX', 'GDTX_QTrach', 'tt'), ('11.68', 'Trung tâm GDNN-GDTX Ba Đồn', 'TT GDNN-GDTX', 'GDTX_BaDon', 'tt'), ('11.69', 'Trung tâm GDNN-GDTX Bố Trạch', 'TT GDNN-GDTX', 'GDTX_BTrach', 'tt'), ('11.70', 'Trung tâm GDNN-GDTX Quảng Ninh', 'TT GDNN-GDTX', 'GDTX_QNinh', 'tt'), ('11.71', 'Trung tâm GDNN-GDTX TP Đồng Hới', 'TT GDNN-GDTX', 'GDTX_DH', 'tt'), ('11.72', 'Trung tâm GDNN-GDTX Lệ Thủy', 'TT GDNN-GDTX', 'GDTX_LThuy', 'tt'), ('11.73', 'Trung tâm GDNN-GDTX khu vực Đông Hà', 'TT GDNN-GDTX', 'GDTX_DongHa', 'tt'), ('11.74', 'Trung tâm GDNN-GDTX khu vực Gio Linh', 'TT GDNN-GDTX', 'GDTX_GL', 'tt'), ('11.75', 'Trung tâm GDNN-GDTX khu vực Cam Lộ', 'TT GDNN-GDTX', 'GDTX_CL', 'tt'), ('11.76', 'Trung tâm GDNN-GDTX khu vực Đakrông', 'TT GDNN-GDTX', 'GDTX_DK', 'tt'), ('11.77', 'Trung tâm GDNN-GDTX khu vực Triệu Phong', 'TT GDNN-GDTX', 'GDTX_TP', 'tt'), ('11.78', 'Trung tâm GDNN-GDTX khu vực Quảng Trị', 'TT GDNN-GDTX', 'GDTX_QT', 'tt'), ('11.79', 'Trung tâm GDNN-GDTX khu vực Hướng Hóa', 'TT GDNN-GDTX', 'GDTX_HH', 'tt'), ('11.80', 'Trung tâm GDNN-GDTX khu vực Vĩnh Linh', 'TT GDNN-GDTX', 'GDTX_VL', 'tt'), ('11.81', 'Trung tâm GDNN-GDTX khu vực Hải Lăng', 'TT GDNN-GDTX', 'GDTX_HL', 'tt')];
+
+function updateLinks() {
+  BASE_URL = document.getElementById('baseUrl').value.replace(/\/+$/, '');
+}
+
+function getLink(stt, ma) {
+  var safe = stt.replace('.','_');
+  return (BASE_URL || 'CHUA_CO_URL') + '/QT2025_' + safe + '_' + ma + '.html';
+}
+
+function copyLink(link, btn) {
+  var url = document.getElementById('baseUrl').value.replace(/\/+$/,'');
+  var parts = link.split('/');
+  var fname = parts[parts.length-1];
+  var finalUrl = url ? url + '/' + fname : fname;
+  navigator.clipboard.writeText(finalUrl).then(function() {
+    btn.textContent = '✅ Đã copy!';
+    setTimeout(function(){ btn.textContent = '📋 Copy link'; }, 2000);
+    showToast('✅ Đã copy link!');
+  });
+}
+
+function copyZalo(msg, btn) {
+  navigator.clipboard.writeText(msg).then(function() {
+    btn.textContent = '✅ Đã copy!';
+    setTimeout(function(){ btn.textContent = '💬 Tin Zalo'; }, 2000);
+    showToast('💬 Đã copy tin Zalo – dán vào Zalo và gửi!');
+  });
+}
+
+function copyAllZalo() {
+  var url = document.getElementById('baseUrl').value.replace(/\/+$/,'');
+  if (!url) { showToast('⚠️ Vui lòng nhập URL GitHub Pages trước!'); return; }
+  var lines = UNITS_DATA.map(function(u) {
+    var stt=u[0],name=u[1],ma=u[3];
+    var safe=stt.replace('.','_');
+    var link = url+'/QT2025_'+safe+'_'+ma+'.html';
+    return name + '\t' + link;
+  });
+  navigator.clipboard.writeText(lines.join('\n')).then(function() {
+    showToast('✅ Đã copy danh sách ' + UNITS_DATA.length + ' link – dán vào Excel để gửi hàng loạt!');
+  });
+}
+
+function filterTable(type) {
+  var rows = document.querySelectorAll('#tblBody tr');
+  var cnt = 0;
+  rows.forEach(function(tr) {
+    var show = !type || tr.getAttribute('data-type') === type;
+    tr.style.display = show ? '' : 'none';
+    if (show) cnt++;
+  });
+  document.getElementById('cnt').textContent = cnt;
+}
+
+function searchTable(q) {
+  var rows = document.querySelectorAll('#tblBody tr');
+  var cnt = 0;
+  rows.forEach(function(tr) {
+    var name = tr.querySelector('td:nth-child(2)').textContent.toLowerCase();
+    var show = !q || name.includes(q.toLowerCase());
+    tr.style.display = show ? '' : 'none';
+    if (show) cnt++;
+  });
+  document.getElementById('cnt').textContent = cnt;
+}
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 3000);
+}
+</script>
+</body>
+</html>
