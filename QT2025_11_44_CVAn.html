@@ -496,17 +496,6 @@ function xuatJSON() {
       tong_chi_ns_va_dv: qt_total + thu_th,
       ty_le_qt_dt_pct: dt_total > 0 ? Math.round(qt_total / dt_total * 10000) / 100 : null
     }
-  };
-
-  // Hiện trạng thái đang gửi
-  showToast('Đang gửi dữ liệu lên Sở...', false, '#1565C0');
-  document.getElementById('step2').className = 'step done';
-  document.getElementById('step3').className = 'step active';
-
-  .catch(function(err) {
-    showToast('Lỗi kết nối! Vui lòng thử lại.', true);
-  });
-}
 
 // ── LƯU TẠM ──
 function luuTam() {
