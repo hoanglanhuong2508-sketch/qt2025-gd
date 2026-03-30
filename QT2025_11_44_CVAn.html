@@ -503,20 +503,6 @@ function xuatJSON() {
   document.getElementById('step2').className = 'step done';
   document.getElementById('step3').className = 'step active';
 
-  // Gửi lên Google Sheets qua Apps Script
-  fetch(SHEETS_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  })
-  .then(function() {
-    luuTam();
-    showToast('Đã gửi thành công lên Sở! Cảm ơn bạn.');
-    document.getElementById('step3').className = 'step done';
-    document.getElementById('el-status').textContent = '✅ Đã nộp cho Sở';
-    document.getElementById('el-status').className = 'status ok';
-  })
   .catch(function(err) {
     showToast('Lỗi kết nối! Vui lòng thử lại.', true);
   });
