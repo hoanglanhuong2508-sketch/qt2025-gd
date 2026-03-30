@@ -1055,5 +1055,66 @@ function showToast(msg) {
   setTimeout(function(){ t.classList.remove('show'); }, 3000);
 }
 </script>
+  <script>
+function getBaseUrl() {
+  let url = document.getElementById("baseUrl").value.trim();
+  if (!url) {
+    // nếu chưa nhập thì tự lấy link hiện tại
+    url = window.location.origin + window.location.pathname.replace("index.html", "");
+  }
+  if (!url.endsWith("/")) url += "/";
+  return url;
+}
+
+function buildLink(file) {
+  return getBaseUrl() + file;
+}
+
+function copyLink(fullLink, btn) {
+  navigator.clipboard.writeText(fullLink);
+  showToast("Đã copy link!");
+}
+
+function copyZalo(text, btn) {
+  navigator.clipboard.writeText(text);
+  showToast("Đã copy tin Zalo!");
+}
+
+function updateLinks() {
+  const base = getBaseUrl();
+  const rows = document.querySelectorAll("#tblBody tr");
+
+  rows.forEach(row => {
+    const fileCell = row.children[3];
+    if (!fileCell) return;
+
+    const fileName = fileCell.innerText.trim();
+    const fullLink = base + fileName;
+
+    const btnCopy = row.querySelector("button:nth-child(1)");
+    const btnZalo = row.querySelector("button:nth-child(2)");
+
+    if (btnCopy) {
+      btnCopy.setAttribute("onclick", `copyLink('${fullLink}', this)`);
+    }
+
+    if (btnZalo) {
+      const schoolName = row.children[1].innerText.trim();
+      const text = `[Sở GD&ĐT Quảng Trị] Kính gửi ${schoolName}, vui lòng bấm link bên dưới để nhập số liệu Quyết toán NS năm 2025. Hạn nộp: 31/3/2026.\n${fullLink}`;
+      btnZalo.setAttribute("onclick", `copyZalo(\`${text}\`, this)`);
+    }
+  });
+
+  showToast("Đã cập nhật toàn bộ link!");
+}
+
+function showToast(msg) {
+  let t = document.createElement("div");
+  t.className = "toast show";
+  t.innerText = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2000);
+}
+</script>
 </body>
 </html>
