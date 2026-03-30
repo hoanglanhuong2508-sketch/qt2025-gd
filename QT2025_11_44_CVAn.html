@@ -1,250 +1,105 @@
-<script>
-// ── THÔNG TIN ĐƠN VỊ (được điền sẵn khi tạo file) ──
-const DV = {
-  stt: '11.44',
-  name: 'Trường THPT Chu Văn An',
-  type: 'Trường THPT',
-  ma: 'CVAn'
-};
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Nhập liệu quyết toán - Chu Văn An</title>
+<style>
+body { font-family: Arial; padding:20px; }
+input { display:block; margin:5px 0; padding:5px; width:300px; }
+button { padding:10px 20px; margin-top:10px; }
+#toast { position:fixed; bottom:20px; right:20px; color:#fff; padding:10px; display:none; }
+#toast.show { display:block; }
+</style>
+</head>
 
-// ── CẤU HÌNH GỬI GOOGLE SHEETS ──
+<body>
+
+<h2>Trường THPT Chu Văn An</h2>
+
+<h3>Ngân sách</h3>
+<input id="ns_dt_dau" placeholder="Dự toán đầu năm">
+<input id="ns_dt_dc" placeholder="Điều chỉnh">
+<input id="ns_dt_truoc" placeholder="Năm trước chuyển sang">
+<input id="ns_qt_tx" placeholder="Quyết toán thường xuyên">
+<input id="ns_qt_ktx" placeholder="Quyết toán không thường xuyên">
+
+<h3>Thu dịch vụ</h3>
+<input id="hp_th" placeholder="Học phí thực thu">
+<input id="dv_th" placeholder="Dịch vụ thực thu">
+
+<h3>Thông tin</h3>
+<input id="nguoi_lap" placeholder="Người lập">
+<input id="thu_truong" placeholder="Thủ trưởng">
+<input id="ngay_lap" placeholder="Ngày lập">
+<input id="sdt" placeholder="SĐT">
+<input id="ghi_chu" placeholder="Ghi chú">
+
+<button onclick="xuatJSON()">Gửi Sở</button>
+
+<div id="toast"></div>
+
+<script>
+
+// ====== LINK APPS SCRIPT ======
 var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxxvl2K82ZBWIcBrLLnnZKQng5v5UegS6epuTnt7vxk10T5YmkezXuYu7mggntkPYAZ7A/exec';
 
-// ── HÀM PHỤ TRỢ ──
-function set(id, val) {
-  const el = document.getElementById(id);
-  if (el) el.value = val !== 0 ? val : '';
+// ====== HÀM ======
+function num(id){ return parseFloat(document.getElementById(id).value)||0; }
+function text(id){ return document.getElementById(id).value || ''; }
+
+function showToast(msg, err){
+  let t = document.getElementById("toast");
+  t.innerText = msg;
+  t.style.background = err ? "red" : "green";
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"),3000);
 }
 
-function num(id) {
-  const el = document.getElementById(id);
-  return parseFloat(el?.value) || 0;
-}
+// ====== GỬI ======
+function xuatJSON(){
 
-function textVal(id) {
-  const el = document.getElementById(id);
-  return (el?.value || '').trim();
-}
+  let dt_total = num('ns_dt_dau') + num('ns_dt_dc') + num('ns_dt_truoc');
+  let qt_total = num('ns_qt_tx') + num('ns_qt_ktx');
+  let thu_th = num('hp_th') + num('dv_th');
 
-function showToast(msg, isWarn) {
-  const t = document.getElementById('toast');
-  if (!t) return;
-  t.textContent = msg;
-  t.style.background = isWarn ? '#E65100' : '#2E7D32';
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 4000);
-}
-
-// ── TÍNH TOÁN TỰ ĐỘNG ──
-function recalc() {
-  const dt_total = num('ns_dt_dau') + num('ns_dt_dc') + num('ns_dt_truoc');
-  set('ns_dt_total', dt_total);
-
-  const qt_total = num('ns_qt_tx') + num('ns_qt_ktx');
-  set('ns_qt_total', qt_total);
-
-  const can_doi = dt_total - qt_total - num('ns_chuyen') - num('ns_huy');
-  set('ns_can_doi', can_doi);
-
-  const hintEl = document.getElementById('hint-candoi');
-  if (hintEl) {
-    if (dt_total === 0) {
-      hintEl.textContent = 'Nhập dự toán để kiểm tra';
-      hintEl.style.color = '';
-    } else if (Math.abs(can_doi) < 0.01) {
-      hintEl.textContent = '✅ Cân đối hợp lệ!';
-      hintEl.style.color = '#2E7D32';
-    } else {
-      hintEl.textContent = '⚠️ Chưa cân đối – kiểm tra lại';
-      hintEl.style.color = '#C62828';
-    }
-  }
-
-  const thu_kh = num('hp_kh') + num('dv_kh');
-  const thu_th = num('hp_th') + num('dv_th');
-  set('thu_kh_total', thu_kh);
-  set('thu_th_total', thu_th);
-
-  const fmt = v => v ? v.toLocaleString('vi-VN') : '—';
-  document.getElementById('r-dt').textContent = fmt(dt_total);
-  document.getElementById('r-qt').textContent = fmt(qt_total);
-
-  const pct = dt_total > 0 ? (qt_total / dt_total * 100).toFixed(1) + '%' : '—';
-  const pctEl = document.getElementById('r-pct');
-  pctEl.textContent = pct;
-  pctEl.className = 'val ' + (
-    dt_total > 0
-      ? (qt_total / dt_total >= 0.95 ? 'green' : qt_total / dt_total < 0.8 ? 'red' : '')
-      : ''
-  );
-
-  document.getElementById('r-thu').textContent = fmt(thu_th);
-  document.getElementById('r-tong').textContent = fmt(qt_total + thu_th);
-
-  const cdEl = document.getElementById('r-cd');
-  cdEl.textContent = dt_total > 0
-    ? (Math.abs(can_doi) < 0.01 ? '✅ 0' : can_doi.toLocaleString('vi-VN'))
-    : '—';
-  cdEl.className = 'val ' + (
-    dt_total > 0
-      ? (Math.abs(can_doi) < 0.01 ? 'green' : 'red')
-      : ''
-  );
-
-  const statusEl = document.getElementById('el-status');
-  if (dt_total > 0 && qt_total > 0) {
-    statusEl.textContent = '✅ Đã nhập liệu';
-    statusEl.className = 'status ok';
-    document.getElementById('step1').className = 'step done';
-    document.getElementById('step2').className = 'step active';
-  } else {
-    statusEl.textContent = '⬜ Chưa nhập liệu';
-    statusEl.className = 'status';
-    document.getElementById('step1').className = 'step active';
-    document.getElementById('step2').className = 'step';
-  }
-}
-
-// ── GỬI DỮ LIỆU LÊN GOOGLE SHEETS ──
-function xuatJSON() {
-  const dt_total = num('ns_dt_dau') + num('ns_dt_dc') + num('ns_dt_truoc');
-  const qt_total = num('ns_qt_tx') + num('ns_qt_ktx');
-  const thu_th = num('hp_th') + num('dv_th');
-
-  if (!dt_total && !qt_total) {
-    showToast('Vui lòng nhập số liệu trước khi gửi!', true);
+  if(!dt_total && !qt_total){
+    showToast("Nhập số liệu trước!", true);
     return;
   }
 
-  const payload = {
-    _meta: {
-      version: '1.0',
-      created: new Date().toISOString(),
-      form: 'qt_giaoduc_2025'
-    },
-    don_vi: {
-      stt: DV.stt,
-      ten: DV.name,
-      loai: DV.type,
-      ma: DV.ma
-    },
-    nguoi_lap: textVal('nguoi_lap'),
-    thu_truong: textVal('thu_truong'),
-    ngay_lap: textVal('ngay_lap'),
-    sdt: textVal('sdt'),
-    ghi_chu: textVal('ghi_chu'),
-    ngan_sach: {
-      dt_dau_nam: num('ns_dt_dau'),
-      dt_dieu_chinh: num('ns_dt_dc'),
-      dt_nam_truoc: num('ns_dt_truoc'),
+  let payload = {
+    don_vi: { ten: "Chu Văn An" },
+    nguoi_lap: text('nguoi_lap'),
+    thu_truong: text('thu_truong'),
+    ngay_lap: text('ngay_lap'),
+    sdt: text('sdt'),
+    ghi_chu: text('ghi_chu'),
+    ngan_sach:{
       dt_tong: dt_total,
-      qt_thuong_xuyen: num('ns_qt_tx'),
-      qt_khong_tx: num('ns_qt_ktx'),
-      qt_tong: qt_total,
-      chuyen_nam_sau: num('ns_chuyen'),
-      huy_bo: num('ns_huy'),
-      can_doi: dt_total - qt_total - num('ns_chuyen') - num('ns_huy')
+      qt_tong: qt_total
     },
-    thu_dich_vu: {
-      hoc_phi_kh: num('hp_kh'),
-      hoc_phi_th: num('hp_th'),
-      dv_khac_kh: num('dv_kh'),
-      dv_khac_th: num('dv_th'),
-      tong_kh: num('hp_kh') + num('dv_kh'),
-      tong_th: thu_th
-    },
-    tong_hop: {
-      tong_chi_ns_va_dv: qt_total + thu_th,
-      ty_le_qt_dt_pct: dt_total > 0
-        ? Math.round((qt_total / dt_total) * 10000) / 100
-        : null
+    tong_hop:{
+      tong: qt_total + thu_th
     }
   };
 
-  showToast('Đang gửi dữ liệu lên Sở...', false);
-  document.getElementById('step2').className = 'step done';
-  document.getElementById('step3').className = 'step active';
-
-  fetch(SHEETS_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'text/plain;charset=utf-8'
-    },
+  fetch(SHEETS_URL,{
+    method:"POST",
+    headers:{ "Content-Type":"text/plain" },
     body: JSON.stringify(payload)
   })
-    .then(function(res) {
-      return res.json();
-    })
-    .then(function(json) {
-      if (!json.ok) {
-        throw new Error(json.message || 'Apps Script không trả về thành công');
-      }
-
-      luuTam();
-      showToast('Đã gửi thành công lên Sở!');
-      document.getElementById('step3').className = 'step done';
-      document.getElementById('el-status').textContent = '✅ Đã nộp cho Sở';
-      document.getElementById('el-status').className = 'status ok';
-    })
-    .catch(function(err) {
-      console.error(err);
-      showToast('Gửi không thành công: ' + err.message, true);
-      document.getElementById('step3').className = 'step active';
-    });
-}
-
-// ── LƯU TẠM ──
-function luuTam() {
-  const fields = [
-    'ns_dt_dau','ns_dt_dc','ns_dt_truoc',
-    'ns_qt_tx','ns_qt_ktx','ns_chuyen','ns_huy',
-    'hp_kh','hp_th','dv_kh','dv_th',
-    'nguoi_lap','ngay_lap','thu_truong','sdt','ghi_chu'
-  ];
-
-  const saved = {};
-  fields.forEach(id => {
-    saved[id] = document.getElementById(id)?.value || '';
+  .then(res=>res.json())
+  .then(res=>{
+    if(!res.ok) throw new Error("Lỗi gửi");
+    showToast("✅ Gửi thành công!");
+  })
+  .catch(err=>{
+    showToast("❌ Lỗi: "+err.message,true);
   });
 
-  localStorage.setItem('qt2025_' + DV.stt, JSON.stringify(saved));
-  showToast('💾 Đã lưu tạm vào trình duyệt!');
 }
 
-function loadTam() {
-  try {
-    const saved = JSON.parse(localStorage.getItem('qt2025_' + DV.stt) || '{}');
-    Object.keys(saved).forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.value = saved[id];
-    });
-    recalc();
-  } catch (e) {
-    console.error(e);
-  }
-}
-
-function xoaDuLieu() {
-  if (!confirm('Xóa toàn bộ dữ liệu đã nhập?')) return;
-
-  const fields = [
-    'ns_dt_dau','ns_dt_dc','ns_dt_truoc',
-    'ns_qt_tx','ns_qt_ktx','ns_chuyen','ns_huy',
-    'hp_kh','hp_th','dv_kh','dv_th',
-    'nguoi_lap','ngay_lap','thu_truong','sdt','ghi_chu'
-  ];
-
-  fields.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.value = '';
-  });
-
-  localStorage.removeItem('qt2025_' + DV.stt);
-  recalc();
-  showToast('🗑 Đã xóa dữ liệu!');
-}
-
-// ── KHỞI TẠO ──
-loadTam();
-recalc();
 </script>
+
+</body>
+</html>
