@@ -383,10 +383,13 @@ function set(id, val) {
 
 // ── GỬI DỮ LIỆU LÊN GOOGLE SHEETS ──
 var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzAxnriwEJWqv96Z9xf35bT95AZRceeEItR9WGZYliMjhmdxq7lBz-hjeaeA61bovLx/exec';
-
 function xuatJSON() {
-  var g = function(id) { return parseFloat(document.getElementById(id) ? document.getElementById(id).value : 0) || 0; };
-  var txt = function(id) { return document.getElementById(id) ? (document.getElementById(id).value || '').trim() : ''; };
+  var g = function(id) { 
+    return parseFloat(document.getElementById(id) ? document.getElementById(id).value : 0) || 0; 
+  };
+  var txt = function(id) { 
+    return document.getElementById(id) ? (document.getElementById(id).value || '').trim() : ''; 
+  };
 
   var dt_total = g('ns_dt_dau') + g('ns_dt_dc') + g('ns_dt_truoc');
   var qt_total = g('ns_qt_tx') + g('ns_qt_ktx');
@@ -396,6 +399,72 @@ function xuatJSON() {
     showToast('Vui lòng nhập số liệu trước khi gửi!', true);
     return;
   }
+
+  var payload = {
+    _meta: { version: '1.0', created: new Date().toISOString(), form: 'qt_giaoduc_2025' },
+    don_vi: { stt: DV.stt, ten: DV.name, loai: DV.type, ma: DV.ma },
+    nguoi_lap:  txt('nguoi_lap'),
+    thu_truong: txt('thu_truong'),
+    ngay_lap:   txt('ngay_lap'),
+    sdt:        txt('sdt'),
+    ghi_chu:    txt('ghi_chu'),
+    ngan_sach: {
+      dt_dau_nam:       g('ns_dt_dau'),
+      dt_dieu_chinh:    g('ns_dt_dc'),
+      dt_nam_truoc:     g('ns_dt_truoc'),
+      dt_tong:          dt_total,
+      qt_thuong_xuyen:  g('ns_qt_tx'),
+      qt_khong_tx:      g('ns_qt_ktx'),
+      qt_tong:          qt_total,
+      chuyen_nam_sau:   g('ns_chuyen'),
+      huy_bo:           g('ns_huy'),
+      can_doi:          dt_total - qt_total - g('ns_chuyen') - g('ns_huy')
+    },
+    thu_dich_vu: {
+      hoc_phi_kh: g('hp_kh'),
+      hoc_phi_th: g('hp_th'),
+      dv_khac_kh: g('dv_kh'),
+      dv_khac_th: g('dv_th'),
+      tong_kh: g('hp_kh') + g('dv_kh'),
+      tong_th: thu_th
+    },
+    tong_hop: {
+      tong_chi_ns_va_dv: qt_total + thu_th,
+      ty_le_qt_dt_pct: dt_total > 0 ? Math.round(qt_total / dt_total * 10000) / 100 : null
+    }
+  };
+
+  showToast('Đang gửi dữ liệu lên Sở...', false);
+  document.getElementById('step2').className = 'step done';
+  document.getElementById('step3').className = 'step active';
+
+  fetch(SHEETS_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'text/plain;charset=utf-8'
+    },
+    body: JSON.stringify(payload)
+  })
+  .then(function(res) {
+    return res.json();
+  })
+  .then(function(json) {
+    if (!json.ok) {
+      throw new Error(json.message || 'Apps Script không trả về thành công');
+    }
+
+    luuTam();
+    showToast('Đã gửi thành công lên Sở!');
+    document.getElementById('step3').className = 'step done';
+    document.getElementById('el-status').textContent = '✅ Đã nộp cho Sở';
+    document.getElementById('el-status').className = 'status ok';
+  })
+  .catch(function(err) {
+    console.error(err);
+    showToast('Gửi không thành công: ' + err.message, true);
+    document.getElementById('step3').className = 'step active';
+  });
+}
 
   var payload = {
     _meta: { version: '1.0', created: new Date().toISOString(), form: 'qt_giaoduc_2025' },
